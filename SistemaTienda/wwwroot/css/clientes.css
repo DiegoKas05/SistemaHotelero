@@ -1,0 +1,80 @@
+﻿/* Estilos para la tabla de clientes */
+.table th {
+    font-weight: 600;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.5rem;
+}
+
+.badge {
+    font-size: 0.85em;
+    padding: 0.35em 0.65em;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.alert {
+    transition: opacity 0.5s ease-out;
+}
+
+.btn-group {
+    white-space: nowrap;
+}
+
+/* Estilos adicionales para la tarjeta */
+.card-clientes {
+    border-radius: 0.5rem;
+    border: none;
+}
+
+.card-header-clientes {
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+}
+
+/* Estilo para el modal de confirmación */
+#confirmDeleteModal .modal-header {
+    background-color: #dc3545;
+}
+
+#confirmDeleteModal .modal-title {
+    font-weight: 600;
+}
+
+#confirmDeleteModal .modal-body {
+    padding: 1.5rem;
+}
+
+#confirmDeleteModal .modal-footer {
+    border-top: none;
+    padding-top: 0;
+}
+
+/* Estilos para la tabla */
+.card-clientes {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-header-clientes {
+    padding: 15px 20px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Estilos para los badges de estado */
+.badge {
+    font-size: 0.85em;
+    padding: 5px 10px;
+    border-radius: 50px;
+}
+
+/* Estilos para los botones de acción */
+.btn-group .btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}

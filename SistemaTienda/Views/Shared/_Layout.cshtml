@@ -1,0 +1,280 @@
+﻿@using SistemaHotelero.Utilidades
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hotel Blue</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css" />
+
+    <!-- Toastr & SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+
+    <style>
+        body {
+            display: flex;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 0.95rem; /* Reducido de 1.05rem */
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            background-color: #3B82F6;
+            color: white;
+            transition: all 0.3s;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+            .sidebar .logo {
+                margin-bottom: 15px; /* Reducido de 20px */
+                text-align: center;
+                padding-top: 15px; /* Reducido de 20px */
+            }
+
+            .sidebar img {
+                max-width: 80%;
+                height: auto;
+            }
+
+            .sidebar a {
+                color: white;
+                text-decoration: none;
+                display: block;
+                padding: 10px 20px; /* Reducido de 12px */
+                font-weight: 500;
+                transition: background-color 0.2s ease;
+                border-radius: 0;
+                font-size: 0.9rem; /* Reducido de tamaño estándar */
+            }
+
+                .sidebar a:hover {
+                    background-color: #2563EB;
+                }
+
+        .submenu {
+            padding-left: 15px;
+            display: none;
+            background-color: #2563EB;
+        }
+
+            .submenu.show {
+                display: block;
+            }
+
+            .submenu a {
+                padding-left: 35px;
+                font-size: 0.85rem; /* Reducido de 0.95rem */
+            }
+
+        .main-content {
+            flex: 1;
+            transition: all 0.3s;
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+
+            .main-content.full-width {
+                width: 100%;
+                margin-left: 0;
+            }
+
+        .main-wrapper {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .user-info {
+            background-color: #2563EB;
+            border-radius: 5px;
+            padding: 8px 10px; /* Reducido de 12px */
+            margin: 8px; /* Reducido de 12px */
+            text-align: center;
+        }
+
+            .user-info i {
+                font-size: 1.8rem; /* Reducido de 2.5rem */
+                margin-bottom: 5px; /* Reducido de 10px */
+            }
+
+            .user-info p {
+                margin-bottom: 3px; /* Reducido de 5px */
+                font-weight: 500;
+                font-size: 0.9rem; /* Reducido de tamaño estándar */
+            }
+
+            .user-info small {
+                opacity: 0.8;
+                font-size: 0.75rem; /* Reducido de 0.85rem */
+            }
+    </style>
+</head>
+<body>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="sidebar p-0">
+            <!-- Logo -->
+            <div class="logo">
+                <img src="~/img/logo-hotel1.png" alt="Hotel Logo" style="width: 220px; height: auto;">
+            </div>
+
+            <!-- Mostrar información del usuario -->
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <p class="mb-1">¡Hola, @User.Identity.Name!</p>
+                <small>@User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value</small>
+            </div>
+
+            <!-- Menú principal -->
+            <a href="@Url.Action("Index", "Dashboard", new { area = "Admin" })">
+                <i class="fas fa-home me-2"></i> Panel
+            </a>
+
+            <!-- Gestión -->
+            <a href="#gestionSub" data-bs-toggle="collapse">
+                <i class="fas fa-concierge-bell me-2"></i> Gestión
+            </a>
+            <div id="gestionSub" class="submenu collapse">
+                <a href="@Url.Action("Index", "Recepcion", new { area = "Admin" })">
+                    <i class="fas fa-door-open me-2"></i> Recepción
+                </a>
+                <a href="@Url.Action("Index", "Salida", new { area = "Admin" })">
+                    <i class="fas fa-sign-out-alt me-2"></i> Salida
+                </a>
+            </div>
+
+            <!-- Tienda -->
+            <a href="#tiendaSub" data-bs-toggle="collapse">
+                <i class="fas fa-store me-2"></i> Tienda
+            </a>
+            <div id="tiendaSub" class="submenu collapse">
+                <a href="@Url.Action("Index", "Productos", new { area = "Admin" })">
+                    <i class="fas fa-box-open me-2"></i> Productos
+                </a>
+                <a href="@Url.Action("Index", "Vender", new { area = "Admin" })">
+                    <i class="fas fa-shopping-cart me-2"></i> Ventas
+                </a>
+            </div>
+
+            <!-- Mantenimiento -->
+            <a href="#mantenimientoSub" data-bs-toggle="collapse">
+                <i class="fas fa-tools me-2"></i> Mantenimiento
+            </a>
+            <div id="mantenimientoSub" class="submenu collapse">
+                <a href="@Url.Action("Index", "Mantenimiento_Hab", new { area = "Admin" })">
+                    <i class="fas fa-bed me-2"></i> Habitaciones
+                </a>
+                <a href="@Url.Action("Index", "Mantenimiento_Categoria", new { area = "Admin" })">
+                    <i class="fas fa-layer-group me-2"></i> Categorías
+                </a>
+                <a href="@Url.Action("Index", "Mantenimiento_Pisos", new { area = "Admin" })">
+                    <i class="fas fa-building me-2"></i> Pisos
+                </a>
+            </div>
+
+            <!-- Reportes -->
+            <a href="#reportesSub" data-bs-toggle="collapse">
+                <i class="fas fa-chart-bar me-2"></i> Reportes
+            </a>
+            <div id="reportesSub" class="submenu collapse">
+                <a href="@Url.Action("Index", "Recepciones", new { area = "Admin" })">
+                    <i class="fas fa-box-open me-2"></i> Recepciones
+                </a>
+                <a href="@Url.Action("Index", "Productos2", new { area = "Admin" })">
+                    <i class="fas fa-shopping-cart me-2"></i> Productos
+                </a>
+            </div>
+
+
+            @if (User.IsInRole(CNT.Admin))
+            {
+                <!-- Administradores -->
+                <a href="@Url.Action("IndexAdministradores", "Usuarios", new { area = "Admin" })">
+                    <i class="fas fa-user-shield me-2"></i> Administradores
+                </a>
+            }
+
+            <!-- Empleados -->
+            <a href="@Url.Action("IndexEmpleados", "Usuarios", new { area = "Admin" })">
+                <i class="fas fa-user-tie me-2"></i> Empleados
+            </a>
+
+            <!-- Clientes -->
+            <a href="@Url.Action("IndexUsuarios", "Usuarios", new { area = "Admin" })">
+                <i class="fas fa-users me-2"></i> Clientes
+            </a>
+
+            <!-- Cerrar sesión -->
+            <div class="mt-auto mb-3">
+                <form asp-area="Identity" asp-page="/Account/Logout" method="post" id="logoutForm">
+                    <a href="#" onclick="document.getElementById('logoutForm').submit();" class="d-block py-2 ps-3">
+                        <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+                    </a>
+                </form>
+            </div>
+        </div>
+    }
+
+    <!-- Contenido principal -->
+    <div class="main-content @(!User.Identity.IsAuthenticated ? "full-width" : "")">
+        @if (!User.Identity.IsAuthenticated && Context.Request.Path.Value.Contains("/Identity/Account/Login"))
+        {
+            <div class="login-container">
+                @RenderBody()
+            </div>
+        }
+        else
+        {
+            <div class="main-wrapper">
+                @RenderBody()
+            </div>
+        }
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <script>
+        document.querySelectorAll('.submenu-toggle').forEach(item => {
+            item.addEventListener('click', function () {
+                const submenu = this.nextElementSibling;
+                submenu.classList.toggle('show');
+            });
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

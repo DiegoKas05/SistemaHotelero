@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Exportar Recepciones";
+}
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="text-primary mb-3">Exportar Recepciones</h5>
+
+            <form asp-action="Exportar" method="get" class="form-inline row g-3">
+                <div class="col-md-4">
+                    <label for="habitacion" class="form-label">Número de Habitación:</label>
+                    <select class="form-control" id="habitacion" name="habitacion">
+                        <option value="">Todos</option>
+                        <option value="101">101</option>
+                        <option value="102">102</option>
+                        <option value="103">103</option>
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="fechaInicio" class="form-label">Fecha de inicio:</label>
+                    <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                </div>
+
+                <div class="col-md-3">
+                    <label for="fechaFin" class="form-label">Fecha final:</label>
+                    <input type="date" class="form-control" id="fechaFin" name="fechaFin" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fa fa-download"></i> Descargar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

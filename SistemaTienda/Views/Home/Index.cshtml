@@ -1,0 +1,9 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<h2>Bienvenido al sistema hotelero</h2>
+
+<p>Usuario: @Context.Session.GetString("usuario")</p>
+
+<a asp-controller="Login" asp-action="CerrarSesion">Cerrar Sesión</a>

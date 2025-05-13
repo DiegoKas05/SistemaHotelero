@@ -1,0 +1,58 @@
+﻿@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Gestión de Habitaciones";
+    var pisos = Model.Select(h => h.Piso).Distinct().ToList();
+}
+
+<div class="container-fluid mt-3">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-start align-items-center mb-4" style="gap: 1rem;">
+                <label class="form-label fw-bold mb-0">Seleccionar Piso</label>
+                <select class="form-select" id="filtroPiso" style="width: 180px">
+                    <option value="Todos">Todos</option>
+                    @foreach (var piso in pisos)
+                    {
+                        <option value="@piso">@piso</option>
+                    }
+                </select>
+            </div>
+
+            <hr class="mb-4" />
+
+            <div class="row" id="contenedor-habitaciones">
+                @foreach (var hab in Model)
+                {
+                    <div class="col-md-3 mb-4 habitacion" data-piso="@hab.Piso">
+                        <div class="border rounded p-3 bg-warning bg-opacity-25 shadow-sm">
+                            <div class="fw-bold">NRO: @hab.Numero</div>
+                            <div class="text-uppercase small text-muted">CATEGORÍA: @hab.Categoria</div>
+                            <div class="my-2">
+                                <i class="fas fa-bed fa-2x text-warning"></i>
+                            </div>
+                            <a href="#" class="btn btn-warning w-100">
+                                INICIAR VENTA <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById("filtroPiso").addEventListener("change", function () {
+            const valor = this.value;
+            const habitaciones = document.querySelectorAll(".habitacion");
+
+            habitaciones.forEach(card => {
+                card.style.display = (valor === "Todos" || card.dataset.piso === valor) ? "block" : "none";
+            });
+        });
+    </script>
+}
