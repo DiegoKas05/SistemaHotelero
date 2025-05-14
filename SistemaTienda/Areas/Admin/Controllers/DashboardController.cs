@@ -16,7 +16,7 @@ namespace SistemaHotelero.Areas.Admin.Controllers
         {
             _contenedorTrabajo = contenedorTrabajo;
         }
-
+        //este es nuestro index
         public IActionResult Index()
         {
             var habitaciones = _contenedorTrabajo.Habitacion.GetAll(
