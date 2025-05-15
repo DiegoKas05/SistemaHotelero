@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 //debe arreglar aqui
 function cargarDataTable() {
-    tablaProducto = $("#tblProducto").DataTable({
+    tablaProducto = $("#tblProduct").DataTable({
         "ajax": {
             "url": "/Admin/Productos/GetAll",
             "type": "GET",
