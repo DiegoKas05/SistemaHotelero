@@ -4,68 +4,68 @@
     ViewData["Title"] = "Crear Habitación";
 }
 
-<div class="container mt-5 d-flex justify-content-center align-items-center" style="min-height: 85vh;">
-    <div class="card shadow border-0" style="width: 650px;">
-        <div class="card-header bg-primary text-white text-center">
-            <h4 class="mb-0"><i class="fas fa-bed me-2"></i>@ViewData["Title"]</h4>
+<div class="container mt-4">
+    <div class="card shadow border-0">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-plus me-2"></i>Crear Habitación</h4>
         </div>
-        <div class="card-body p-4">
+
+        <div class="card-body">
             <form asp-action="Crear" method="post">
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="Habitacion.Numero" class="form-label small">Número</label>
-                        <input asp-for="Habitacion.Numero" class="form-control form-control-sm" />
-                        <span asp-validation-for="Habitacion.Numero" class="text-danger small"></span>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label asp-for="Habitacion.Numero" class="form-label"></label>
+                        <input asp-for="Habitacion.Numero" class="form-control" />
+                        <span asp-validation-for="Habitacion.Numero" class="text-danger"></span>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="Habitacion.Detalle" class="form-label small">Detalle</label>
-                        <input asp-for="Habitacion.Detalle" class="form-control form-control-sm" />
-                        <span asp-validation-for="Habitacion.Detalle" class="text-danger small"></span>
+
+                    <div class="col-md-4">
+                        <label asp-for="Habitacion.Precio" class="form-label"></label>
+                        <input asp-for="Habitacion.Precio" class="form-control" />
+                        <span asp-validation-for="Habitacion.Precio" class="text-danger"></span>
                     </div>
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="Habitacion.Precio" class="form-label small">Precio</label>
-                        <input asp-for="Habitacion.Precio" class="form-control form-control-sm" type="number" step="0.01" />
-                        <span asp-validation-for="Habitacion.Precio" class="text-danger small"></span>
+
+                    <div class="col-md-4">
+                        <label asp-for="Habitacion.Detalle" class="form-label"></label>
+                        <input asp-for="Habitacion.Detalle" class="form-control" />
+                        <span asp-validation-for="Habitacion.Detalle" class="text-danger"></span>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Habitacion.IdCategoria" class="form-label small">Categoría</label>
-                        <select asp-for="Habitacion.IdCategoria" class="form-select form-select-sm" asp-items="Model.ListaCategoria">
-                            <option value="">Seleccione una categoría</option>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label asp-for="Habitacion.IdCategoria" class="form-label"></label>
+                        <select asp-for="Habitacion.IdCategoria" asp-items="Model.ListaCategoria" class="form-select">
+                            <option value="">-- Seleccionar Categoría --</option>
                         </select>
-                        <span asp-validation-for="Habitacion.IdCategoria" class="text-danger small"></span>
+                        <span asp-validation-for="Habitacion.IdCategoria" class="text-danger"></span>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Habitacion.IdPiso" class="form-label small">Piso</label>
-                        <select asp-for="Habitacion.IdPiso" class="form-select form-select-sm" asp-items="Model.ListaPiso">
-                            <option value="">Seleccione un piso</option>
+
+                    <div class="col-md-4">
+                        <label asp-for="Habitacion.IdPiso" class="form-label"></label>
+                        <select asp-for="Habitacion.IdPiso" asp-items="Model.ListaPiso" class="form-select">
+                            <option value="">-- Seleccionar Piso --</option>
                         </select>
-                        <span asp-validation-for="Habitacion.IdPiso" class="text-danger small"></span>
+                        <span asp-validation-for="Habitacion.IdPiso" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="Habitacion.IdEstadoHabitacion" class="form-label"></label>
+                        <select asp-for="Habitacion.IdEstadoHabitacion" asp-items="Model.ListaEstado" class="form-select">
+                            <option value="">-- Seleccionar Estado --</option>
+                        </select>
+                        <span asp-validation-for="Habitacion.IdEstadoHabitacion" class="text-danger"></span>
                     </div>
                 </div>
 
-                <div class="mb-4">
-                    <label asp-for="Habitacion.IdEstadoHabitacion" class="form-label small">Estado de Habitación</label>
-                    <select asp-for="Habitacion.IdEstadoHabitacion" class="form-select form-select-sm" asp-items="Model.ListaEstado">
-                        <option value="">Seleccione un estado</option>
-                    </select>
-                    <span asp-validation-for="Habitacion.IdEstadoHabitacion" class="text-danger small"></span>
-                </div>
-
-                <div class="form-check mb-4">
-                    <input class="form-check-input" asp-for="Habitacion.Estado" type="checkbox" />
-                    <label class="form-check-label small" asp-for="Habitacion.Estado">Activo</label>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" asp-for="Habitacion.Estado" />
+                    <label class="form-check-label" asp-for="Habitacion.Estado"></label>
                 </div>
 
                 <div class="d-flex justify-content-between">
-                    <button type="submit" class="btn btn-success btn-sm">
-                        <i class="fas fa-save me-1"></i> Guardar
-                    </button>
-                    <a asp-action="Index" class="btn btn-secondary btn-sm">
-                        <i class="fas fa-arrow-left me-1"></i> Volver
-                    </a>
+                    <a asp-action="Index" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver</a>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar</button>
                 </div>
             </form>
         </div>

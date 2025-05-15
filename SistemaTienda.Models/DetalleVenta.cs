@@ -27,6 +27,8 @@ namespace SistemaHotelero.Models
         public int Cantidad { get; set; }
 
         public decimal SubTotal { get; set; }
+
+        public DateTime FechaCreacion { get; set; } = DateTime.Now;
     }
 }
 
