@@ -14,5 +14,6 @@ namespace SistemaHotelero.Models
         public string Descripcion { get; set; }
 
         public bool Estado { get; set; } = true; // Valor por defecto
+        public DateTime FechaCreacion { get; set; } = DateTime.Now;
     }
 }

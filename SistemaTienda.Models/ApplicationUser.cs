@@ -31,5 +31,8 @@ namespace SistemaHotelero.Models
         [RegularExpression(@"^[0-9]+$", ErrorMessage = "Solo se permiten números")]
         [StringLength(20, MinimumLength = 4, ErrorMessage = "Debe tener entre 4 y 20 dígitos")]
         public string NumeroDocumento { get; set; }
+
+        public DateTime FechaCreacion { get; set; } = DateTime.Now;
+
     }
 }
