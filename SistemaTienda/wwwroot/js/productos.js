@@ -4,7 +4,6 @@ $(document).ready(function () {
     cargarDataTable();
 });
 
-//debe arreglar aqui js
 function cargarDataTable() {
     tablaProducto = $("#tblProducto").DataTable({
         "ajax": {
