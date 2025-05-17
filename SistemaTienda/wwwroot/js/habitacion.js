@@ -7,17 +7,28 @@ $(document).ready(function () {
 function cargarDataTable() {
     tablaHabitacion = $("#tblHabitaciones").DataTable({
         "ajax": {
-            "url": "/Admin/Habitacion/GetAll",
+            "url": "/Admin/Habitaciones/GetAll",
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
             { "data": "numero" },
             { "data": "detalle" },
-            { "data": "precio", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
-            { "data": "estadoHabitacion.descripcion" },
-            { "data": "piso.numero" },
-            { "data": "categoria.descripcion" },
+            {
+                "data": "precio",
+                "render": function (data) {
+                    return "$ " + parseFloat(data).toFixed(2);
+                }
+            },
+            {
+                "data": "estadoHabitacion.descripcion"
+            },
+            {
+                "data": "piso.descripcion"
+            },
+            {
+                "data": "categoria.descripcion"
+            },
             {
                 "data": "estado",
                 "render": function (data) {
@@ -31,15 +42,15 @@ function cargarDataTable() {
                 "render": function (data) {
                     return `
                 <div class="text-center">
-                    <a href="/Admin/Habitacion/Edit/${data}" class="btn btn-sm btn-outline-primary" style="width: 80px">
+                    <a href="/Admin/Habitaciones/Edit/${data}" class="btn btn-sm btn-outline-primary" style="width: 80px">
                         <i class="fas fa-edit"></i> Editar
                     </a>
                     &nbsp;
-                    <a onclick="Eliminar('/Admin/Habitacion/Delete/${data}')" class="btn btn-sm btn-outline-danger" style="width: 80px">
+                    <a onclick="Eliminar('/Admin/Habitaciones/Delete/${data}')" class="btn btn-sm btn-outline-danger" style="width: 80px">
                         <i class="fas fa-trash-alt"></i> Borrar
                     </a>
                 </div>
-    `;
+                `;
                 },
                 "width": "20%"
             }

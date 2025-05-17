@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SistemaHotelero.Models
 {
@@ -24,24 +19,27 @@ namespace SistemaHotelero.Models
         [Required(ErrorMessage = "El precio es obligatorio.")]
         public decimal Precio { get; set; }
 
-        [ForeignKey("EstadoHabitacion")]
+        // FK explícitas
+        [Required(ErrorMessage = "El estado de la habitación es obligatorio.")]
         public int IdEstadoHabitacion { get; set; }
 
-        public EstadoHabitacion EstadoHabitacion { get; set; }
+        [ForeignKey("IdEstadoHabitacion")]
+        public EstadoHabitacion? EstadoHabitacion { get; set; } // Hacer nullable
 
-        [ForeignKey("Piso")]
+        [Required(ErrorMessage = "El piso es obligatorio.")]
         public int IdPiso { get; set; }
 
-        public Piso Piso { get; set; }
+        [ForeignKey("IdPiso")]
+        public Piso? Piso { get; set; } // Hacer nullable
 
-        [ForeignKey("Categoria")]
+        [Required(ErrorMessage = "La categoría es obligatoria.")]
         public int IdCategoria { get; set; }
 
-        public Categoria Categoria { get; set; }
+        [ForeignKey("IdCategoria")]
+        public Categoria? Categoria { get; set; } // Hacer nullable
 
-        public bool Estado { get; set; } = true; // Valor por defecto
+        public bool Estado { get; set; } = true;
 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
-
     }
 }

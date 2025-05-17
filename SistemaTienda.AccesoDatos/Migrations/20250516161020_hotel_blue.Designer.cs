@@ -12,8 +12,8 @@ using SistemaHotelero.Data;
 namespace SistemaHotelero.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250512173228_hotel")]
-    partial class hotel
+    [Migration("20250516161020_hotel_blue")]
+    partial class hotel_blue
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -248,52 +248,12 @@ namespace SistemaHotelero.DataAccess.Migrations
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("IdCategoria");
 
                     b.ToTable("CATEGORIA");
-                });
-
-            modelBuilder.Entity("SistemaHotelero.Models.Cliente", b =>
-                {
-                    b.Property<int>("IdCliente")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCliente"));
-
-                    b.Property<string>("Apellido")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Clave")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Correo")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Documento")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("TipoDocumento")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.HasKey("IdCliente");
-
-                    b.ToTable("CLIENTE");
                 });
 
             modelBuilder.Entity("SistemaHotelero.Models.DetalleVenta", b =>
@@ -306,6 +266,9 @@ namespace SistemaHotelero.DataAccess.Migrations
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdProducto")
                         .HasColumnType("int");
@@ -325,49 +288,6 @@ namespace SistemaHotelero.DataAccess.Migrations
                     b.ToTable("DETALLE_VENTA");
                 });
 
-            modelBuilder.Entity("SistemaHotelero.Models.Empleado", b =>
-                {
-                    b.Property<int>("IdEmpleado")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdEmpleado"));
-
-                    b.Property<string>("Apellido")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Clave")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Correo")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Documento")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("TipoDocumento")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
-
-                    b.HasKey("IdEmpleado");
-
-                    b.ToTable("EMPLEADO");
-                });
-
             modelBuilder.Entity("SistemaHotelero.Models.EstadoHabitacion", b =>
                 {
                     b.Property<int>("IdEstadoHabitacion")
@@ -383,6 +303,9 @@ namespace SistemaHotelero.DataAccess.Migrations
 
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("IdEstadoHabitacion");
 
@@ -404,6 +327,9 @@ namespace SistemaHotelero.DataAccess.Migrations
 
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdCategoria")
                         .HasColumnType("int");
@@ -449,6 +375,9 @@ namespace SistemaHotelero.DataAccess.Migrations
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("IdPiso");
 
                     b.ToTable("PISO");
@@ -472,6 +401,9 @@ namespace SistemaHotelero.DataAccess.Migrations
 
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -512,8 +444,9 @@ namespace SistemaHotelero.DataAccess.Migrations
                     b.Property<DateTime?>("FechaSalidaConfirmacion")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("IdCliente")
-                        .HasColumnType("int");
+                    b.Property<string>("IdApplicationUser")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("IdHabitacion")
                         .HasColumnType("int");
@@ -534,7 +467,7 @@ namespace SistemaHotelero.DataAccess.Migrations
 
                     b.HasKey("IdRecepcion");
 
-                    b.HasIndex("IdCliente");
+                    b.HasIndex("IdApplicationUser");
 
                     b.HasIndex("IdHabitacion");
 
@@ -553,6 +486,9 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("IdRecepcion")
                         .HasColumnType("int");
@@ -580,6 +516,9 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -697,9 +636,9 @@ namespace SistemaHotelero.DataAccess.Migrations
 
             modelBuilder.Entity("SistemaHotelero.Models.Recepcion", b =>
                 {
-                    b.HasOne("SistemaHotelero.Models.Cliente", "Cliente")
+                    b.HasOne("SistemaHotelero.Models.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("IdCliente")
+                        .HasForeignKey("IdApplicationUser")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -709,7 +648,7 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Cliente");
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Habitacion");
                 });

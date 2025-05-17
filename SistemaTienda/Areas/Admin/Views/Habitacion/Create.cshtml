@@ -1,0 +1,60 @@
+﻿@model SistemaHotelero.Models.Habitacion
+
+@{
+    ViewData["Title"] = "Crear Habitación";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="Numero" class="form-label">Número</label>
+        <input asp-for="Numero" class="form-control" />
+        <span asp-validation-for="Numero" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Detalle" class="form-label">Detalle</label>
+        <input asp-for="Detalle" class="form-control" />
+        <span asp-validation-for="Detalle" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Precio" class="form-label">Precio</label>
+        <input asp-for="Precio" class="form-control" type="number" step="0.01" />
+        <span asp-validation-for="Precio" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IdPiso" class="form-label">Piso</label>
+        <select asp-for="IdPiso" class="form-select" asp-items="ViewBag.Pisos">
+            <option value="">-- Seleccione Piso --</option>
+        </select>
+        <span asp-validation-for="IdPiso" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IdEstadoHabitacion" class="form-label">Estado</label>
+        <select asp-for="IdEstadoHabitacion" class="form-select" asp-items="ViewBag.Estados">
+            <option value="">-- Seleccione Estado --</option>
+        </select>
+        <span asp-validation-for="IdEstadoHabitacion" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="IdCategoria" class="form-label">Categoría</label>
+        <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.Categorias">
+            <option value="">-- Seleccione Categoría --</option>
+        </select>
+        <span asp-validation-for="IdCategoria" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

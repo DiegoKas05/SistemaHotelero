@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SistemaHotelero.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class hotel : Migration
+    public partial class hotel_blue : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,6 +36,7 @@ namespace SistemaHotelero.DataAccess.Migrations
                     Direccion = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     TipoDocumento = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     NumeroDocumento = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -63,47 +64,12 @@ namespace SistemaHotelero.DataAccess.Migrations
                     IdCategoria = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                    Estado = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_CATEGORIA", x => x.IdCategoria);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CLIENTE",
-                columns: table => new
-                {
-                    IdCliente = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TipoDocumento = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Documento = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Apellido = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Correo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Clave = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CLIENTE", x => x.IdCliente);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EMPLEADO",
-                columns: table => new
-                {
-                    IdEmpleado = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    TipoDocumento = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Documento = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Apellido = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Correo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Clave = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EMPLEADO", x => x.IdEmpleado);
                 });
 
             migrationBuilder.CreateTable(
@@ -113,7 +79,8 @@ namespace SistemaHotelero.DataAccess.Migrations
                     IdEstadoHabitacion = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                    Estado = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -127,7 +94,8 @@ namespace SistemaHotelero.DataAccess.Migrations
                     IdPiso = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                    Estado = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,7 +112,8 @@ namespace SistemaHotelero.DataAccess.Migrations
                     Detalle = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Precio = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
-                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                    Estado = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -269,7 +238,8 @@ namespace SistemaHotelero.DataAccess.Migrations
                     IdEstadoHabitacion = table.Column<int>(type: "int", nullable: false),
                     IdPiso = table.Column<int>(type: "int", nullable: false),
                     IdCategoria = table.Column<int>(type: "int", nullable: false),
-                    Estado = table.Column<bool>(type: "bit", nullable: false)
+                    Estado = table.Column<bool>(type: "bit", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -300,7 +270,7 @@ namespace SistemaHotelero.DataAccess.Migrations
                 {
                     IdRecepcion = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    IdCliente = table.Column<int>(type: "int", nullable: false),
+                    IdApplicationUser = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     IdHabitacion = table.Column<int>(type: "int", nullable: false),
                     FechaEntrada = table.Column<DateTime>(type: "datetime2", nullable: false),
                     FechaSalida = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -317,10 +287,10 @@ namespace SistemaHotelero.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_RECEPCION", x => x.IdRecepcion);
                     table.ForeignKey(
-                        name: "FK_RECEPCION_CLIENTE_IdCliente",
-                        column: x => x.IdCliente,
-                        principalTable: "CLIENTE",
-                        principalColumn: "IdCliente",
+                        name: "FK_RECEPCION_AspNetUsers_IdApplicationUser",
+                        column: x => x.IdApplicationUser,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_RECEPCION_HABITACION_IdHabitacion",
@@ -338,7 +308,8 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IdRecepcion = table.Column<int>(type: "int", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Estado = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Estado = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -360,7 +331,8 @@ namespace SistemaHotelero.DataAccess.Migrations
                     IdVenta = table.Column<int>(type: "int", nullable: false),
                     IdProducto = table.Column<int>(type: "int", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
-                    SubTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    SubTotal = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -444,9 +416,9 @@ namespace SistemaHotelero.DataAccess.Migrations
                 column: "IdPiso");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RECEPCION_IdCliente",
+                name: "IX_RECEPCION_IdApplicationUser",
                 table: "RECEPCION",
-                column: "IdCliente");
+                column: "IdApplicationUser");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RECEPCION_IdHabitacion",
@@ -481,13 +453,7 @@ namespace SistemaHotelero.DataAccess.Migrations
                 name: "DETALLE_VENTA");
 
             migrationBuilder.DropTable(
-                name: "EMPLEADO");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "PRODUCTO");
@@ -499,7 +465,7 @@ namespace SistemaHotelero.DataAccess.Migrations
                 name: "RECEPCION");
 
             migrationBuilder.DropTable(
-                name: "CLIENTE");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "HABITACION");

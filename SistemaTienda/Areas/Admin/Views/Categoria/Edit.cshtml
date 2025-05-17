@@ -1,0 +1,181 @@
+﻿@model SistemaHotelero.Models.Categoria
+
+@{
+    ViewData["Title"] = "Editar Categoría";
+}
+
+<style>
+    :root {
+        --primary-color: #4e5bf2;
+        --secondary-color: #3a49d1;
+        --text-color: #333333;
+        --light-bg: #f8f9fa;
+        --card-bg: #ffffff;
+        --border-color: #e0e0e0;
+    }
+
+    body {
+        font-family: 'Segoe UI', 'Roboto', sans-serif;
+        background-color: var(--light-bg);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+    }
+
+    .auth-container {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .auth-card {
+        background-color: var(--card-bg);
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+        .auth-header h5 {
+            font-weight: 700;
+            margin: 1rem 0 0.5rem 0;
+            color: var(--text-color);
+        }
+
+        .auth-header h3 {
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .auth-header p {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        display: block;
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 12px 15px;
+        background-color: #f1f3f5;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        width: 100%;
+        font-size: 0.9rem;
+    }
+
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(78, 91, 242, 0.25);
+            border-color: var(--primary-color);
+        }
+
+    .form-check-label {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .btn-success {
+        background-color: var(--primary-color);
+        border: none;
+        padding: 12px;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+        font-size: 0.95rem;
+        width: 48%;
+    }
+
+        .btn-success:hover {
+            background-color: var(--secondary-color);
+        }
+
+    .btn-secondary {
+        width: 48%;
+        font-size: 0.95rem;
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    .text-danger {
+        font-size: 0.85rem;
+        color: #dc3545;
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+        .auth-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .auth-footer a:hover {
+                text-decoration: underline;
+            }
+</style>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <h5 class="text-uppercase fw-bold">Sistema Hotelero</h5>
+            <h3>Editar Categoría</h3>
+            <p>Modifique los datos de la categoría seleccionada</p>
+        </div>
+
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="IdCategoria" />
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger small"></div>
+
+            <div class="form-group">
+                <label asp-for="Descripcion" class="form-label">Descripción</label>
+                <input asp-for="Descripcion" class="form-control" />
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mb-4">
+                <input asp-for="Estado" class="form-check-input" />
+                <label asp-for="Estado" class="form-check-label">Activo</label>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save me-1"></i> Actualizar
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Volver
+                </a>
+            </div>
+        </form>
+
+        <div class="auth-footer mt-4">
+            &copy; @DateTime.Now.Year - SistemaHotelero - <a href="#">Privacidad</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
