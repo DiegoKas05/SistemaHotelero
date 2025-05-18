@@ -50,9 +50,18 @@
                     <i class="fas @icono fa-lg text-@color"></i>
                 </div>
                 <div class="mt-3">
-                    <button class="btn btn-@color w-100 text-white fw-bold">
-                        @habitacion.EstadoHabitacion.Descripcion.ToUpper()
-                    </button>
+                    @if (habitacion.EstadoHabitacion.Descripcion.ToLower() == "disponible")
+                    {
+                        <a asp-action="Registrar" asp-route-id="@habitacion.IdHabitacion" class="btn btn-success w-100 fw-bold text-white">
+                            DISPONIBLE
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-@color w-100 text-white fw-bold" disabled>
+                            @habitacion.EstadoHabitacion.Descripcion.ToUpper()
+                        </button>
+                    }
                 </div>
             </div>
         </div>

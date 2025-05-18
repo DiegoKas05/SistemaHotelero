@@ -67,7 +67,7 @@ namespace SistemaHotelero.DataAccess.Data.Repository
             {
                 foreach (var property in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    query = query.Include(includeProperties);
+                    query = query.Include(property.Trim());
                 }
             }
 
