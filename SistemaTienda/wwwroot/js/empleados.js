@@ -1,8 +1,7 @@
 ﻿
-// se debe arreglar empleado
 
 $(document).ready(function () {
-    $('#tblEmplead').DataTable({
+    $('#tblEmpleados').DataTable({
         ajax: {
             url: '/Admin/Usuarios/GetAllEmpleados',
             type: 'GET',
