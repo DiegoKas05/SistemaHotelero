@@ -1,0 +1,85 @@
+﻿@model SistemaHotelero.Models.ViewModels.ReservaVM
+
+@{
+    ViewData["Title"] = "Registrar Reserva";
+}
+
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow border-0" style="width: 600px;">
+        <div class="card-header bg-primary text-white text-center">
+            <h4 class="mb-0"><i class="fas fa-concierge-bell me-2"></i> @ViewData["Title"]</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Registrar" method="post">
+                <input type="hidden" asp-for="Recepcion.IdHabitacion" />
+
+                <!-- Habitación y detalle -->
+                <div class="mb-2">
+                    <label class="form-label fw-semibold">Habitación</label>
+                    <input class="form-control form-control-sm" value="@Model.Habitacion.Numero - @Model.Habitacion.Categoria.Descripcion" readonly />
+                </div>
+
+                <div class="mb-2">
+                    <label class="form-label fw-semibold">Detalle</label>
+                    <input class="form-control form-control-sm" value="@Model.Habitacion.Detalle" readonly />
+                </div>
+
+                <!-- Cliente -->
+                <div class="mb-2">
+                    <label asp-for="Recepcion.IdApplicationUser" class="form-label fw-semibold">Cliente</label>
+                    <select asp-for="Recepcion.IdApplicationUser" class="form-select form-select-sm" asp-items="Model.ListaClientes">
+                        <option value="">Seleccione un cliente</option>
+                    </select>
+                    <span asp-validation-for="Recepcion.IdApplicationUser" class="text-danger small"></span>
+                </div>
+
+                <!-- Fecha Entrada y Salida -->
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label asp-for="Recepcion.FechaEntrada" class="form-label fw-semibold">Fecha Entrada</label>
+                        <input asp-for="Recepcion.FechaEntrada" class="form-control form-control-sm" readonly />
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label asp-for="Recepcion.FechaSalida" class="form-label fw-semibold">Fecha Salida</label>
+                        <input asp-for="Recepcion.FechaSalida" class="form-control form-control-sm" type="date" />
+                        <span asp-validation-for="Recepcion.FechaSalida" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <!-- Precio y Adelanto -->
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <label asp-for="Recepcion.PrecioInicial" class="form-label fw-semibold">Precio</label>
+                        <input asp-for="Recepcion.PrecioInicial" class="form-control form-control-sm" readonly />
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <label asp-for="Recepcion.Adelanto" class="form-label fw-semibold">Adelanto</label>
+                        <input asp-for="Recepcion.Adelanto" class="form-control form-control-sm" />
+                    </div>
+                </div>
+
+                <!-- Observación -->
+                <div class="mb-3">
+                    <label asp-for="Recepcion.Observacion" class="form-label fw-semibold">Observación</label>
+                    <textarea asp-for="Recepcion.Observacion" class="form-control form-control-sm"></textarea>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success btn-sm">
+                        <i class="fas fa-save me-1"></i> Registrar Reserva
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-arrow-left me-1"></i> Volver
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+
