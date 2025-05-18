@@ -1,6 +1,4 @@
 ﻿
-// se debe arreglar empleado
-
 $(document).ready(function () {
     $('#tblEmpleados').DataTable({
         ajax: {
