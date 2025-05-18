@@ -1,6 +1,7 @@
-﻿using SistemaHotelero.Data;
+﻿using SistemaHotelero.Models;
 using SistemaHotelero.DataAccess.Data.Repository.iRepository;
-using SistemaHotelero.Models;
+using SistemaHotelero.Data;
+using System.Linq;
 
 namespace SistemaHotelero.DataAccess.Data.Repository
 {
@@ -20,6 +21,7 @@ namespace SistemaHotelero.DataAccess.Data.Repository
             {
                 objDesdeDb.Descripcion = piso.Descripcion;
                 objDesdeDb.Estado = piso.Estado;
+                // No actualizamos FechaCreacion para mantener su valor original.
             }
         }
     }

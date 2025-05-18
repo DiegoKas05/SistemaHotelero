@@ -1,23 +1,18 @@
-﻿var tablaHabitacion;
+﻿var tablaCategoria;
 
 $(document).ready(function () {
     cargarDataTable();
 });
 
 function cargarDataTable() {
-    tablaHabitacion = $("#tblHabitaciones").DataTable({
+    tablaCategoria = $("#tblCategorias").DataTable({
         "ajax": {
-            "url": "/Admin/Habitacion/GetAll",
+            "url": "/Admin/Categoria/GetAll",
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "numero" },
-            { "data": "detalle" },
-            { "data": "precio", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
-            { "data": "estadoHabitacion.descripcion" },
-            { "data": "piso.numero" },
-            { "data": "categoria.descripcion" },
+            { "data": "descripcion" },
             {
                 "data": "estado",
                 "render": function (data) {
@@ -27,15 +22,15 @@ function cargarDataTable() {
                 }
             },
             {
-                "data": "idHabitacion",
+                "data": "idCategoria",
                 "render": function (data) {
                     return `
                 <div class="text-center">
-                    <a href="/Admin/Habitacion/Edit/${data}" class="btn btn-sm btn-outline-primary" style="width: 80px">
+                    <a href="/Admin/Categoria/Edit/${data}" class="btn btn-sm btn-outline-primary" style="width: 80px">
                         <i class="fas fa-edit"></i> Editar
                     </a>
                     &nbsp;
-                    <a onclick="Eliminar('/Admin/Habitacion/Delete/${data}')" class="btn btn-sm btn-outline-danger" style="width: 80px">
+                    <a onclick="Eliminar('/Admin/Categoria/Delete/${data}')" class="btn btn-sm btn-outline-danger" style="width: 80px">
                         <i class="fas fa-trash-alt"></i> Borrar
                     </a>
                 </div>
@@ -54,7 +49,7 @@ function cargarDataTable() {
 function Eliminar(url) {
     Swal.fire({
         title: '¿Estás seguro?',
-        text: "¡No podrás recuperar la habitación!",
+        text: "¡No podrás recuperar la categoría!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -69,7 +64,7 @@ function Eliminar(url) {
                 success: function (data) {
                     if (data.success) {
                         toastr.success(data.message);
-                        tablaHabitacion.ajax.reload();
+                        tablaCategoria.ajax.reload();
                     } else {
                         toastr.error(data.message);
                     }

@@ -1,5 +1,4 @@
 ﻿using SistemaHotelero.AccesoDatos.Data.Repository.iRepository;
-using SistemaHotelero.AccesoDatos.Repositorio.IRepositorio;
 using SistemaHotelero.Data;
 using SistemaHotelero.DataAccess.Data.Repository;
 using SistemaHotelero.Models;

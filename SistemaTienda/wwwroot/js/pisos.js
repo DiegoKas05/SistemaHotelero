@@ -1,23 +1,18 @@
-﻿var tablaHabitacion;
+﻿var tablaPiso;
 
 $(document).ready(function () {
     cargarDataTable();
 });
 
 function cargarDataTable() {
-    tablaHabitacion = $("#tblHabitaciones").DataTable({
+    tablaPiso = $("#tblPiso").DataTable({
         "ajax": {
-            "url": "/Admin/Habitacion/GetAll",
+            "url": "/Admin/Pisos/GetAll",
             "type": "GET",
             "datatype": "json"
         },
         "columns": [
-            { "data": "numero" },
-            { "data": "detalle" },
-            { "data": "precio", "render": $.fn.dataTable.render.number(',', '.', 2, '$') },
-            { "data": "estadoHabitacion.descripcion" },
-            { "data": "piso.numero" },
-            { "data": "categoria.descripcion" },
+            { "data": "descripcion" },
             {
                 "data": "estado",
                 "render": function (data) {
@@ -27,15 +22,22 @@ function cargarDataTable() {
                 }
             },
             {
-                "data": "idHabitacion",
+                "data": "fechaCreacion",
+                "render": function (data) {
+                    const fecha = new Date(data);
+                    return fecha.toLocaleDateString();
+                }
+            },
+            {
+                "data": "idPiso",
                 "render": function (data) {
                     return `
                 <div class="text-center">
-                    <a href="/Admin/Habitacion/Edit/${data}" class="btn btn-sm btn-outline-primary" style="width: 80px">
+                    <a href="/Admin/Pisos/Edit/${data}" class="btn btn-sm btn-outline-primary" style="width: 80px">
                         <i class="fas fa-edit"></i> Editar
                     </a>
                     &nbsp;
-                    <a onclick="Eliminar('/Admin/Habitacion/Delete/${data}')" class="btn btn-sm btn-outline-danger" style="width: 80px">
+                    <a onclick="Eliminar('/Admin/Pisos/Delete/${data}')" class="btn btn-sm btn-outline-danger" style="width: 80px">
                         <i class="fas fa-trash-alt"></i> Borrar
                     </a>
                 </div>
@@ -54,7 +56,7 @@ function cargarDataTable() {
 function Eliminar(url) {
     Swal.fire({
         title: '¿Estás seguro?',
-        text: "¡No podrás recuperar la habitación!",
+        text: "¡No podrás recuperar el piso!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -69,7 +71,7 @@ function Eliminar(url) {
                 success: function (data) {
                     if (data.success) {
                         toastr.success(data.message);
-                        tablaHabitacion.ajax.reload();
+                        tablaPiso.ajax.reload();
                     } else {
                         toastr.error(data.message);
                     }

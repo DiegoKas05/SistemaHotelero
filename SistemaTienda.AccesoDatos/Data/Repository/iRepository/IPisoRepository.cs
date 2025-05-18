@@ -7,3 +7,4 @@ namespace SistemaHotelero.DataAccess.Data.Repository.iRepository
         void Update(Piso piso);
     }
 }
+
