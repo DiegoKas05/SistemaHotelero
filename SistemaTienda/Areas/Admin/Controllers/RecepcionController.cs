@@ -9,6 +9,8 @@ namespace SistemaHotelero.Areas.Admin.Controllers
 {
     [Authorize(Roles = "Admin,Empleado")]
     [Area("Admin")]
+
+    //nuevaaa
     public class RecepcionController : Controller
     {
         private readonly IContenedorTrabajo _contenedorTrabajo;
