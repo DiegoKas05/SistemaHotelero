@@ -9,6 +9,8 @@ namespace SistemaHotelero.DataAccess.Data.Repository.iRepository
         Task<IdentityResult> RegistrarUsuarioAsync(ApplicationUser usuario, string password, string rolUsuario);
 
         IEnumerable<ApplicationUser> GetAll();
+        IEnumerable<ApplicationUser> ObtenerClientes();
+
     }
 
 
