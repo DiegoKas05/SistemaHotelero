@@ -58,9 +58,10 @@
                     }
                     else
                     {
-                        <button class="btn btn-@color w-100 text-white fw-bold" disabled>
-                            @habitacion.EstadoHabitacion.Descripcion.ToUpper()
-                        </button>
+                        <a asp-action="Detalle" asp-route-id="@habitacion.IdHabitacion" class="btn btn-danger w-100 text-white fw-bold">
+                            OCUPADO
+                        </a>
+
                     }
                 </div>
             </div>
