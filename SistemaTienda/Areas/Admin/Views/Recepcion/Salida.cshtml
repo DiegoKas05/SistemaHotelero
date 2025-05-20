@@ -1,0 +1,40 @@
+﻿@model SistemaHotelero.Models.Recepcion
+
+@{
+    ViewBag.Title = "Salida de Cliente";
+}
+
+<h2>Salida de Cliente</h2>
+
+<form asp-action="Salida" method="post">
+    <input type="hidden" asp-for="IdRecepcion" />
+    <input type="hidden" asp-for="IdHabitacion" />
+
+    <div class="form-group">
+        <label>Cliente</label>
+        <input type="text" class="form-control" value="@($"{Model.ApplicationUser.Nombre} {Model.ApplicationUser.Apellido}")" disabled />
+    </div>
+
+    <div class="form-group">
+        <label>Habitación</label>
+        <input type="text" class="form-control" value="@Model.Habitacion.Numero" disabled />
+    </div>
+
+    <div class="form-group">
+        <label>Fecha de Salida</label>
+        <input asp-for="FechaSalida" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label>Total Pagado</label>
+        <input asp-for="TotalPagado" class="form-control" required />
+    </div>
+
+    <div class="form-group">
+        <label>Costo de Penalidad (si aplica)</label>
+        <input asp-for="CostoPenalidad" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Registrar Salida</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

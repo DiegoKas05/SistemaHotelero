@@ -42,5 +42,22 @@ public class ApplicationUserRepository : IApplicationUserRepository
         return _userManager.Users.ToList();
 
     }
+    public IEnumerable<ApplicationUser> ObtenerClientes()
+    {
+        var listaUsuarios = _userManager.Users.ToList();
+        var clientes = new List<ApplicationUser>();
+
+        foreach (var usuario in listaUsuarios)
+        {
+            var roles = _userManager.GetRolesAsync(usuario).Result;
+            if (roles.Contains("Usuario")) // Aquí validamos que sea cliente
+            {
+                clientes.Add(usuario);
+            }
+        }
+
+        return clientes;
+    }
+
 }
 

@@ -1,10 +1,68 @@
-﻿@{
-    ViewData["Title"] = "Salida";
+﻿@model IEnumerable<SistemaHotelero.Models.Habitacion>
+
+@{
+    ViewData["Title"] = "Habitaciones Ocupadas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container text-center py-5">
-    <h2 class="fw-bold">Módulo de Salida</h2>
-    <p class="text-muted">Aquí se gestionarán las salidas de clientes. Funcionalidad en desarrollo.</p>
-    <i class="fas fa-tools fa-4x text-warning mt-4"></i>
+<div class="container-fluid px-4">
+    <h2 class="mt-4 mb-3 text-primary"><i class="fas fa-door-closed"></i> Habitaciones Ocupadas</h2>
+
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <div class="row align-items-center mb-3">
+                <label for="cbopiso" class="col-sm-2 col-form-label text-muted fw-bold">Seleccionar Piso</label>
+                <div class="col-sm-4">
+                    <select class="form-select shadow-sm" id="cbopiso">
+                        <option value="Todos">Todos</option>
+                        @foreach (var piso in Model.Select(h => h.Piso.Descripcion).Distinct())
+                        {
+                            <option value="@piso">@piso</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row" id="habitaciones">
+                @foreach (var habitacion in Model)
+                {
+                    <div class="col-xl-3 col-md-6 mb-4 tarjeta-habitacion" data-piso="@habitacion.Piso.Descripcion">
+                        <div class="card border-start border-4 border-danger shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <h5 class="fw-bold mb-1 text-dark">NRO: @habitacion.Numero</h5>
+                                        <span class="badge bg-light text-dark border">@habitacion.Categoria.Descripcion</span>
+                                    </div>
+                                    <i class="fas fa-bed fa-2x text-danger"></i>
+                                </div>
+                                <p class="mb-0 text-muted small">Piso: @habitacion.Piso.Descripcion</p>
+                            </div>
+                            <div class="card-footer bg-danger text-white d-flex justify-content-between align-items-center">
+                                <a asp-action="RegistrarSalida" asp-route-id="@habitacion.IdHabitacion"
+                                   class="text-white fw-bold text-uppercase stretched-link">
+                                    Registrar Salida
+                                </a>
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Scripts {
+    <script>
+        document.getElementById('cbopiso').addEventListener('change', function () {
+            const pisoSeleccionado = this.value;
+            const tarjetas = document.querySelectorAll('.tarjeta-habitacion');
+
+            tarjetas.forEach(tarjeta => {
+                const piso = tarjeta.getAttribute('data-piso');
+                tarjeta.style.display = (pisoSeleccionado === "Todos" || piso === pisoSeleccionado) ? "block" : "none";
+            });
+        });
+    </script>
+}

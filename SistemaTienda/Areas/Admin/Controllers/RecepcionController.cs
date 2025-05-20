@@ -9,8 +9,6 @@ namespace SistemaHotelero.Areas.Admin.Controllers
 {
     [Authorize(Roles = "Admin,Empleado")]
     [Area("Admin")]
-
-    //nuevaaa
     public class RecepcionController : Controller
     {
         private readonly IContenedorTrabajo _contenedorTrabajo;
@@ -29,6 +27,7 @@ namespace SistemaHotelero.Areas.Admin.Controllers
 
             return View(habitaciones);
         }
+
         [HttpGet]
         public IActionResult Registrar(int id)
         {
@@ -42,7 +41,7 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             var viewModel = new ReservaVM
             {
                 Habitacion = habitacion,
-                ListaClientes = _contenedorTrabajo.ApplicationUser.GetAll()
+                ListaClientes = _contenedorTrabajo.ApplicationUser.ObtenerClientes()
                     .Select(u => new SelectListItem
                     {
                         Text = $"{u.Nombre} {u.Apellido} - {u.NumeroDocumento}",
@@ -59,26 +58,45 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             return View(viewModel);
         }
 
+        // Nuevo método para marcar habitación en limpieza
+        [HttpPost]
+        public IActionResult CambiarALimpieza(int id)
+        {
+            var habitacion = _contenedorTrabajo.Habitacion.Get(id);
+            if (habitacion == null)
+                return NotFound();
+
+            // Supongamos que el estado 3 es "En limpieza"
+            habitacion.IdEstadoHabitacion = 3;
+            _contenedorTrabajo.Habitacion.Update(habitacion);
+            _contenedorTrabajo.Save();
+
+            return Json(new { success = true, message = "Habitación marcada para limpieza." });
+        }
+
+        [HttpPost]
+        public IActionResult CambiarADisponible(int id)
+        {
+            var habitacion = _contenedorTrabajo.Habitacion.Get(id);
+            if (habitacion == null)
+                return NotFound();
+
+            // Estado 1 es "Disponible"
+            habitacion.IdEstadoHabitacion = 1;
+            _contenedorTrabajo.Habitacion.Update(habitacion);
+            _contenedorTrabajo.Save();
+
+            return Json(new { success = true, message = "Habitación actualizada a Disponible." });
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(ReservaVM viewModel)
         {
-            if (!ModelState.IsValid)
+            if (viewModel.Recepcion.IdApplicationUser == null)
             {
-                var habitacion = _contenedorTrabajo.Habitacion.GetFirstOrderDefault(
-                    h => h.IdHabitacion == viewModel.Recepcion.IdHabitacion,
-                    includeProperties: "Categoria,Piso,EstadoHabitacion");
-
-                viewModel.Habitacion = habitacion;
-                viewModel.ListaClientes = _contenedorTrabajo.ApplicationUser.GetAll()
-                    .Select(u => new SelectListItem
-                    {
-                        Text = $"{u.Nombre} {u.Apellido} - {u.NumeroDocumento}",
-                        Value = u.Id
-                    });
-
-                return View(viewModel);
+                TempData["Error"] = "Debe seleccionar un cliente.";
+                return RedirectToAction("Index");
             }
 
             viewModel.Recepcion.Estado = true;
@@ -86,17 +104,31 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             _contenedorTrabajo.Recepcion.Add(viewModel.Recepcion);
 
             var habitacionDb = _contenedorTrabajo.Habitacion.Get(viewModel.Recepcion.IdHabitacion);
-            habitacionDb.IdEstadoHabitacion = 5; // ID del estado OCUPADO
+            habitacionDb.IdEstadoHabitacion = 2; // Estado 2 es "Ocupada"
             _contenedorTrabajo.Habitacion.Update(habitacionDb);
 
             _contenedorTrabajo.Save();
 
-            TempData["Success"] = "Reserva registrada correctamente.";
+            TempData["Mensaje"] = "Reserva registrada correctamente.";
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult Detalle(int id)
+        {
+            var reserva = _contenedorTrabajo.Recepcion.GetAll(
+                r => r.IdHabitacion == id && r.Estado == true,
+                includeProperties: "Habitacion.Categoria,Habitacion.Piso,Habitacion.EstadoHabitacion,ApplicationUser")
+                .OrderByDescending(r => r.FechaEntrada)
+                .FirstOrDefault();
 
+            if (reserva == null)
+            {
+                TempData["Error"] = "No se encontró una reserva activa para esta habitación.";
+                return RedirectToAction("Index");
+            }
 
+            return View(reserva);
+        }
     }
-
 }
