@@ -1,10 +1,11 @@
 ﻿@model SistemaHotelero.Models.Recepcion
 
 @{
-    ViewData["Title"] = "Detalle de Reserva";
+    ViewData["Title"] = "Registrar Salida";
 }
 
 <style>
+    /* Usa los mismos estilos que en Detalle.cshtml de Recepcion */
     :root {
         --primary-color: #4e5bf2;
         --secondary-color: #3a49d1;
@@ -17,6 +18,7 @@
         --card-bg: #ffffff;
         --border-color: #e0e0e0;
         --muted-text: #6c757d;
+        --total-pay-color: #007bff; /* New color for total to pay */
     }
 
     .detalle-container {
@@ -141,6 +143,29 @@
         color: #6c757d;
     }
 
+    .total-pay-section {
+        background-color: #eaf4ff; 
+        border-left: 5px solid var(--total-pay-color);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .total-pay-label {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--total-pay-color);
+    }
+
+    .total-pay-value {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--total-pay-color);
+    }
+
     /* Responsive */
     @@media (max-width: 768px) {
         .form-row {
@@ -155,6 +180,26 @@
         .detail-label {
             margin-bottom: 0.3rem;
         }
+
+        .total-pay-section {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+
+    .pago-section {
+        background-color: #fff8e1;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-top: 2rem;
+        border-left: 4px solid var(--warning-color);
+    }
+
+    .total-pagar {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--danger-color);
     }
 </style>
 
@@ -224,7 +269,7 @@
             </div>
             <div class="detail-item">
                 <span class="detail-label">Fecha Salida:</span>
-                <div class="detail-value">@(Model.FechaSalida?.ToShortDateString() ?? "No definida")</div>
+                <div class="detail-value">@DateTime.Now.ToShortDateString()</div>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Costo Total:</span>
@@ -238,34 +283,34 @@
                 <span class="detail-label">Saldo Pendiente:</span>
                 <div class="detail-value currency-value">$@((Model.PrecioInicial - Model.Adelanto).ToString("F2"))</div>
             </div>
-            <div class="detail-item">
-                <span class="detail-label">Estado:</span>
-                <div class="detail-value">
-                    @if (Model.Estado)
-                    {
-                        <span class="badge badge-success">Activa</span>
-                    }
-                    else
-                    {
-                        <span class="badge badge-secondary">Finalizada</span>
-                    }
+        </div>
+
+        <div class="pago-section">
+            <h5 class="section-title">Registrar Pago</h5>
+            <form asp-action="RegistrarSalida" method="post">
+                <input type="hidden" name="idRecepcion" value="@Model.IdRecepcion" />
+
+                <div class="form-group">
+                    <label class="form-label">Total a Pagar:</label>
+                    <div class="total-pagar">$@((Model.PrecioInicial - Model.Adelanto).ToString("F2"))</div>
                 </div>
-            </div>
-            <div class="detail-item">
-                <span class="detail-label">Observaciones:</span>
-                <div class="detail-value">@(!string.IsNullOrEmpty(Model.Observacion) ? Model.Observacion : "Ninguna")</div>
-            </div>
-        </div>
 
-        <h5 class="section-title">Servicios Adicionales</h5>
-        <div class="empty-services">
-            <i class="fas fa-info-circle"></i> No se encontraron servicios registrados
-        </div>
+                <div class="form-group">
+                    <label class="form-label">Monto Recibido:</label>
+                    <input type="number" name="montoPagado" class="form-control"
+                           step="0.01" min="0" max="@(Model.PrecioInicial - Model.Adelanto)"
+                           value="@(Model.PrecioInicial - Model.Adelanto)" required />
+                </div>
 
-        <div class="buttons-container">
-            <a asp-action="Index" class="btn-action btn-secondary">
-                <i class="fas fa-arrow-left"></i> Volver al listado
-            </a>
+                <div class="buttons-container">
+                    <a asp-action="Index" class="btn-action btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Cancelar
+                    </a>
+                    <button type="submit" class="btn-action btn-primary">
+                        <i class="fas fa-check"></i> Registrar Pago y Salida
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
