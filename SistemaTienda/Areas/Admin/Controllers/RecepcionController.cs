@@ -113,6 +113,7 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+
         [HttpGet]
         public IActionResult Detalle(int id)
         {

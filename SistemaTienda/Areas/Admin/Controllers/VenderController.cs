@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SistemaHotelero.DataAccess.Data.Repository.iRepository;
 using SistemaHotelero.Models.ViewModels;
 
 namespace SistemaHotelero.Areas.Admin.Controllers
@@ -8,19 +9,20 @@ namespace SistemaHotelero.Areas.Admin.Controllers
     [Area("Admin")]
     public class VenderController : Controller
     {
+        private readonly IContenedorTrabajo _contenedorTrabajo;
+        public VenderController(IContenedorTrabajo contenedorTrabajo)
+        {
+            _contenedorTrabajo = contenedorTrabajo ?? throw new ArgumentNullException(nameof(contenedorTrabajo));
+        }
+
         public IActionResult Index()
         {
-            // Simulación de habitaciones
-            var habitaciones = new List<dynamic>
-            {
-                new { Numero = "017", Categoria = "Individual", Piso = "1" },
-                new { Numero = "016", Categoria = "Doble", Piso = "1" },
-                new { Numero = "015", Categoria = "Suite", Piso = "2" },
-                new { Numero = "014", Categoria = "Individual", Piso = "2" },
-                new { Numero = "013", Categoria = "Suite", Piso = "2" }
-            };
+            var habitacionesOcupadas = _contenedorTrabajo.Habitacion.GetAll(
+                h => h.Estado == true && h.EstadoHabitacion.Descripcion == "Ocupado",
+                includeProperties: "Categoria,Piso,EstadoHabitacion"
+            ).ToList();
 
-            return View(habitaciones);
+            return View(habitacionesOcupadas);
         }
     }
 }
