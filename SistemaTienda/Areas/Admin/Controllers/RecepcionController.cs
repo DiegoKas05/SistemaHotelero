@@ -98,6 +98,8 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                 TempData["Error"] = "Debe seleccionar un cliente.";
                 return RedirectToAction("Index");
             }
+            //aguardar la fecha
+            viewModel.Recepcion.FechaEntrada = DateTime.Now;
 
             viewModel.Recepcion.Estado = true;
 
@@ -108,10 +110,9 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             _contenedorTrabajo.Habitacion.Update(habitacionDb);
 
             _contenedorTrabajo.Save();
-
-            TempData["Mensaje"] = "Reserva registrada correctamente.";
             return RedirectToAction("Index");
         }
+
 
         [HttpGet]
         public IActionResult Detalle(int id)
