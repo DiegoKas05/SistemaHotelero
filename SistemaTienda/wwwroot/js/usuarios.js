@@ -41,7 +41,7 @@
 function Eliminar(url) {
     Swal.fire({
         title: '¿Estás seguro?',
-        text: "¡No podrás recuperar el producto!",
+        text: "¡No podrás recuperar este usuario!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -56,12 +56,24 @@ function Eliminar(url) {
                 success: function (data) {
                     if (data.success) {
                         toastr.success(data.message);
-                        window.location.reload(); // Recarga toda la vista IndexUsuarios
+                        $('#tblUsuarios').DataTable().ajax.reload(); // Recarga la tabla sin recargar la página
                     } else {
-                        toastr.error(data.message);
+                        // Mostrar error con SweetAlert si el cliente no puede ser eliminado
+                        Swal.fire({
+                            title: 'Acción no permitida',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
                     }
+                },
+                error: function () {
+                    toastr.error('Error al procesar la solicitud.');
                 }
             });
         }
     });
 }
+
+
+

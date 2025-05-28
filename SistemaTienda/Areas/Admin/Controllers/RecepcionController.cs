@@ -93,23 +93,27 @@ namespace SistemaHotelero.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Registrar(ReservaVM viewModel)
         {
+            // Validación: el cliente es obligatorio
             if (viewModel.Recepcion.IdApplicationUser == null)
             {
                 TempData["Error"] = "Debe seleccionar un cliente.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Registrar", new { id = viewModel.Recepcion.IdHabitacion });
             }
-            //aguardar la fecha
-            viewModel.Recepcion.FechaEntrada = DateTime.Now;
 
+            // Asignar fecha actual y estado
+            viewModel.Recepcion.FechaEntrada = DateTime.Now;
             viewModel.Recepcion.Estado = true;
 
             _contenedorTrabajo.Recepcion.Add(viewModel.Recepcion);
 
+            // Cambiar habitación a "Ocupada"
             var habitacionDb = _contenedorTrabajo.Habitacion.Get(viewModel.Recepcion.IdHabitacion);
-            habitacionDb.IdEstadoHabitacion = 2; // Estado 2 es "Ocupada"
+            habitacionDb.IdEstadoHabitacion = 2;
             _contenedorTrabajo.Habitacion.Update(habitacionDb);
 
             _contenedorTrabajo.Save();
+
+            TempData["Mensaje"] = "Reserva registrada correctamente.";
             return RedirectToAction("Index");
         }
 

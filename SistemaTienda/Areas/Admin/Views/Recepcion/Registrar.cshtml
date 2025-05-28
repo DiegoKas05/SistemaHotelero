@@ -235,7 +235,7 @@
 
                 <div class="form-group">
                     <label asp-for="Recepcion.FechaSalida" class="form-label">Fecha Salida:</label>
-                    <input asp-for="Recepcion.FechaSalida" class="form-control" type="date" />
+                    <input asp-for="Recepcion.FechaSalida" class="form-control" type="date" id="Recepcion_FechaSalida" />
                     <span asp-validation-for="Recepcion.FechaSalida" class="text-danger small"></span>
                 </div>
             </div>
@@ -271,9 +271,13 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-
     <script>
         $(document).ready(function () {
+            // Evitar selección de fechas pasadas
+            const hoy = new Date().toISOString().split("T")[0];
+            document.getElementById("Recepcion_FechaSalida").setAttribute("min", hoy);
+
+            // Precio
             var precioBaseHabitacion = parseFloat($("#PrecioBaseHabitacion").val());
 
             function calcularPrecioTotal() {
@@ -297,5 +301,5 @@
             });
         });
     </script>
-
 }
+

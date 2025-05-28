@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SistemaHotelero.Data;
+using SistemaHotelero.DataAccess.Data.Repository.iRepository;
 using SistemaHotelero.Models;
 using SistemaHotelero.Models.ViewModels;
 using System.Linq;
@@ -13,11 +15,17 @@ namespace SistemaHotelero.Areas.Admin.Controllers
     public class UsuariosController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IContenedorTrabajo _contenedorTrabajo;
 
-        public UsuariosController(UserManager<ApplicationUser> userManager)
+
+
+        public UsuariosController(UserManager<ApplicationUser> userManager, IContenedorTrabajo contenedorTrabajo)
         {
             _userManager = userManager;
+            _contenedorTrabajo = contenedorTrabajo;
         }
+
+
 
         public IActionResult IndexUsuarios() => View();
         public IActionResult IndexAdministradores() => View();
@@ -509,14 +517,28 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                 return Json(new { success = false, message = "Usuario no encontrado." });
             }
 
-            var result = await _userManager.DeleteAsync(usuario);
+            var esCliente = await _userManager.IsInRoleAsync(usuario, "Usuario");
+            if (esCliente)
+            {
+                var tieneReservaActiva = _contenedorTrabajo.Recepcion
+            .GetAll()
+            .Any(r => r.IdApplicationUser == id && r.Estado == true);
+                if (tieneReservaActiva)
+                {
+                    return Json(new { success = false, message = "No se puede eliminar este cliente porque tiene una habitación ocupada." });
+                }
+            }
 
+            var result = await _userManager.DeleteAsync(usuario);
             if (result.Succeeded)
             {
                 return Json(new { success = true, message = "Usuario eliminado correctamente." });
             }
+
             return Json(new { success = false, message = "Error al eliminar el usuario." });
         }
+
+
         #endregion
     }
 }

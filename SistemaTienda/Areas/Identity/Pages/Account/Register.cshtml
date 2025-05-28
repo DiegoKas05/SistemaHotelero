@@ -4,6 +4,13 @@
 @{
     ViewData["Title"] = "Registro";
 }
+@if (User.Identity.IsAuthenticated)
+{
+    <script>
+        window.location.href = "/Admin/Inicio/Index";
+    </script>
+}
+
 
 <style>
     :root {
