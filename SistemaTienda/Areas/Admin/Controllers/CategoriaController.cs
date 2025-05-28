@@ -75,6 +75,19 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             if (categoria == null)
                 return Json(new { success = false, message = "Categoría no encontrada." });
 
+            // Verificar si hay habitaciones asociadas a esta categoría
+            bool tieneHabitaciones = _contenedorTrabajo.Habitacion.GetAll()
+                .Any(h => h.IdCategoria == id);
+
+            if (tieneHabitaciones)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "No se puede eliminar la categoría porque tiene habitaciones asociadas."
+                });
+            }
+
             _contenedorTrabajo.Categoria.Remove(categoria);
             _contenedorTrabajo.Save();
             return Json(new { success = true, message = "Categoría eliminada correctamente." });
