@@ -59,20 +59,22 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             // Actualizar la recepción
             recepcion.Estado = false; // Marcar como finalizada
             recepcion.FechaSalida = DateTime.Now;
+
+            // Aquí marcamos como pagado el total
+            recepcion.TotalPagado = recepcion.PrecioInicial;
+
             _contenedorTrabajo.Recepcion.Actualizar(recepcion);
 
-            // Actualizar la habitación a disponible
+            // Actualizar la habitación a limpieza
             var habitacion = _contenedorTrabajo.Habitacion.Get(recepcion.IdHabitacion);
-            habitacion.IdEstadoHabitacion = 3; // 1 = Disponible
+            habitacion.IdEstadoHabitacion = 3; // 3 = Limpieza
             _contenedorTrabajo.Habitacion.Update(habitacion);
-
-            // Registrar el pago (aquí puedes implementar tu lógica de pagos)
-            // ...
 
             _contenedorTrabajo.Save();
 
-            TempData["Mensaje"] = "Salida registrada correctamente y habitación marcada como disponible.";
+            TempData["Mensaje"] = "Salida registrada correctamente y habitación marcada como limpieza.";
             return RedirectToAction("Index");
         }
+
     }
 }

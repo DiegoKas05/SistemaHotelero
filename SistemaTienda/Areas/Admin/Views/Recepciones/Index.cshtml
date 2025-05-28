@@ -39,7 +39,22 @@
                     </button>
                 </div>
             </form>
+
+            <div class="mt-3">
+                <button type="button" class="btn btn-primary w-100" onclick="verDetallesEnSistema()">
+                    <i class="fas fa-eye"></i> Ver Detalles en Sistema
+                </button>
+            </div>
         </div>
     </div>
 </div>
 
+<script>
+    function verDetallesEnSistema() {
+        const habitacion = document.getElementById("habitacion").value;
+        const fechaInicio = document.getElementById("fechaInicio").value;
+        const fechaFin = document.getElementById("fechaFin").value;
+        const url = `/Admin/Recepciones/MostrarDetalles?habitacion=${habitacion}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`;
+        window.location.href = url;
+    }
+</script>

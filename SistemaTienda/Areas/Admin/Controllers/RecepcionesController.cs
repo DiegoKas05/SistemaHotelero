@@ -102,6 +102,26 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                 }
             }
         }
+        // Método nuevo para mostrar los detalles en pantalla
+        [HttpGet]
+        public IActionResult MostrarDetalles(string habitacion, string fechaInicio, string fechaFin)
+        {
+            // Validar fechas opcionales
+            bool tieneFechaInicio = DateTime.TryParse(fechaInicio, out DateTime fi);
+            bool tieneFechaFin = DateTime.TryParse(fechaFin, out DateTime ff);
+
+            var datos = _contenedorTrabajo.Recepcion.GetAll(
+                r =>
+                    r.Estado == true && // Solo reservas activas
+                    (string.IsNullOrEmpty(habitacion) || habitacion == "Todos" || r.Habitacion.Numero == habitacion) &&
+                    (!tieneFechaInicio || r.FechaEntrada.Date >= fi.Date) &&
+                    (!tieneFechaFin || r.FechaEntrada.Date <= ff.Date),
+                includeProperties: "Habitacion.Categoria,ApplicationUser,Habitacion"
+            ).ToList();
+
+            return View(datos);
+        }
+
 
 
     }

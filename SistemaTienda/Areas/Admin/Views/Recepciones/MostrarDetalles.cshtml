@@ -1,0 +1,42 @@
+﻿@model List<SistemaHotelero.Models.Recepcion>
+
+@{
+    ViewData["Title"] = "Detalle de Habitaciones";
+}
+
+<h4 class="text-primary mb-4">
+    <i class="fas fa-bed"></i> Detalle de Habitaciones
+</h4>
+
+@if (Model != null && Model.Any())
+{
+    foreach (var item in Model)
+    {
+        <div class="card mb-4 shadow-sm" style="font-size: 0.95rem;">
+            <div class="card-header text-white fw-bold" style="background-color: #0569FF;">
+                Habitación @item.Habitacion.Numero
+            </div>
+            <div class="card-body px-4 py-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>📝 Detalles:</strong> @item.Habitacion.Detalle</p>
+                        <p><strong>📁 Categoría:</strong> @item.Habitacion.Categoria.Descripcion</p>
+                        <p><strong>📅 Entrada:</strong> @item.FechaEntrada.ToString("dd/MM/yyyy")</p>
+                        <p><strong>📅 Salida:</strong> @(item.FechaSalida.HasValue ? item.FechaSalida.Value.ToString("dd/MM/yyyy") : "Pendiente")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>🧑 Cliente:</strong> @item.ApplicationUser.Nombre @item.ApplicationUser.Apellido</p>
+                        <p><strong>📧 Correo:</strong> @item.ApplicationUser.Email</p>
+                        <p><strong>💵 Precio Inicial:</strong> <span class="text-success fw-bold">$@item.PrecioInicial.ToString("F2")</span></p>
+                        <p><strong>💰 Adelanto:</strong> <span class="text-info fw-bold">$@item.Adelanto.ToString("F2")</span></p>
+                        <p><strong>✅ Total Pagado:</strong> <span class="text-primary fw-bold">$@item.TotalPagado.ToString("F2")</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-warning">No se encontraron registros de habitaciones activas para las fechas seleccionadas.</div>
+}
