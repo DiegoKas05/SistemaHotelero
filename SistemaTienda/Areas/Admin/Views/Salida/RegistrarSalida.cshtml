@@ -264,8 +264,9 @@
             </div>
             <div class="detail-item">
                 <span class="detail-label">Fecha Salida:</span>
-                <div class="detail-value">@DateTime.Now.ToShortDateString()</div>
+                <div class="detail-value">@(Model.FechaSalida?.ToShortDateString() ?? "No definida")</div>
             </div>
+
             <div class="detail-item">
                 <span class="detail-label">Costo Total:</span>
                 <div class="detail-value currency-value">$@Model.PrecioInicial.ToString("F2")</div>
@@ -292,9 +293,9 @@
 
                 <div class="form-group">
                     <label class="form-label">Monto Recibido:</label>
-                    <input type="number" name="montoPagado" class="form-control"
-                           step="0.01" min="0" max="@(Model.PrecioInicial - Model.Adelanto)"
-                           value="@(Model.PrecioInicial - Model.Adelanto)" required />
+                    <input type="text" class="form-control total-pagar"
+                           value="$@((Model.PrecioInicial - Model.Adelanto).ToString("F2"))" readonly />
+                    <input type="hidden" name="montoPagado" value="@(Model.PrecioInicial - Model.Adelanto)" />
                 </div>
 
                 <div class="buttons-container" style="margin-top: 25px; display: flex; justify-content: space-between; align-items: center;">
