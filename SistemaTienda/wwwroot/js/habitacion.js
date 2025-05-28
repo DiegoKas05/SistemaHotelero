@@ -65,7 +65,7 @@ function cargarDataTable() {
 function Eliminar(url) {
     Swal.fire({
         title: '¿Estás seguro?',
-        text: "¡No podrás recuperar la habitacion!",
+        text: "¡No podrás recuperar la habitación!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -80,9 +80,8 @@ function Eliminar(url) {
                 success: function (data) {
                     if (data.success) {
                         toastr.success(data.message);
-                        tablaPiso.ajax.reload();
+                        tablaHabitacion.ajax.reload();
                     } else {
-                        // Mostrar mensaje de error con SweetAlert
                         Swal.fire({
                             title: 'Error',
                             text: data.message,
