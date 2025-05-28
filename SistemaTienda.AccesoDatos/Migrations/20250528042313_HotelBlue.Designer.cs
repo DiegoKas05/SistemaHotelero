@@ -12,8 +12,8 @@ using SistemaHotelero.Data;
 namespace SistemaHotelero.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250516161020_hotel_blue")]
-    partial class hotel_blue
+    [Migration("20250528042313_HotelBlue")]
+    partial class HotelBlue
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -612,19 +612,16 @@ namespace SistemaHotelero.DataAccess.Migrations
                     b.HasOne("SistemaHotelero.Models.Categoria", "Categoria")
                         .WithMany()
                         .HasForeignKey("IdCategoria")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SistemaHotelero.Models.EstadoHabitacion", "EstadoHabitacion")
                         .WithMany()
                         .HasForeignKey("IdEstadoHabitacion")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SistemaHotelero.Models.Piso", "Piso")
                         .WithMany()
                         .HasForeignKey("IdPiso")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categoria");

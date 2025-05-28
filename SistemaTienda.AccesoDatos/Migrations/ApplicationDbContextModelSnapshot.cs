@@ -609,19 +609,16 @@ namespace SistemaHotelero.DataAccess.Migrations
                     b.HasOne("SistemaHotelero.Models.Categoria", "Categoria")
                         .WithMany()
                         .HasForeignKey("IdCategoria")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SistemaHotelero.Models.EstadoHabitacion", "EstadoHabitacion")
                         .WithMany()
                         .HasForeignKey("IdEstadoHabitacion")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SistemaHotelero.Models.Piso", "Piso")
                         .WithMany()
                         .HasForeignKey("IdPiso")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categoria");

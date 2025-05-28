@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SistemaHotelero.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class hotel_blue : Migration
+    public partial class HotelBlue : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -248,20 +248,17 @@ namespace SistemaHotelero.DataAccess.Migrations
                         name: "FK_HABITACION_CATEGORIA_IdCategoria",
                         column: x => x.IdCategoria,
                         principalTable: "CATEGORIA",
-                        principalColumn: "IdCategoria",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdCategoria");
                     table.ForeignKey(
                         name: "FK_HABITACION_ESTADO_HABITACION_IdEstadoHabitacion",
                         column: x => x.IdEstadoHabitacion,
                         principalTable: "ESTADO_HABITACION",
-                        principalColumn: "IdEstadoHabitacion",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdEstadoHabitacion");
                     table.ForeignKey(
                         name: "FK_HABITACION_PISO_IdPiso",
                         column: x => x.IdPiso,
                         principalTable: "PISO",
-                        principalColumn: "IdPiso",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdPiso");
                 });
 
             migrationBuilder.CreateTable(
