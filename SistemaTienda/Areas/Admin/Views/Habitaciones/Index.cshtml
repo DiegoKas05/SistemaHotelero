@@ -35,4 +35,18 @@
 
 @section Scripts {
     <script src="~/js/habitacion.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var mensajeError = '@TempData["Error"]';
+            if (mensajeError) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Acción no permitida',
+                    text: mensajeError
+                });
+            }
+        });
+    </script>
 }
+

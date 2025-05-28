@@ -82,10 +82,20 @@ function Eliminar(url) {
                         toastr.success(data.message);
                         tablaHabitacion.ajax.reload();
                     } else {
-                        toastr.error(data.message);
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
                     }
+                },
+                error: function () {
+                    toastr.error('Ocurrió un error al procesar la solicitud');
                 }
             });
         }
     });
 }
+
+
