@@ -65,6 +65,8 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                 habitacion.FechaCreacion = DateTime.Now;
                 habitacion.Estado = true;
 
+
+
                 _contenedorTrabajo.Habitacion.Add(habitacion);
                 _contenedorTrabajo.Save();
 

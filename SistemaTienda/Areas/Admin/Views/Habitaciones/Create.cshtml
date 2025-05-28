@@ -158,13 +158,7 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group">
-                    <label asp-for="IdEstadoHabitacion" class="form-label">Estado</label>
-                    <select asp-for="IdEstadoHabitacion" class="form-control" asp-items="ViewBag.IdEstadoHabitacion" required>
-                        <option value="">Seleccione estado</option>
-                    </select>
-                    <span asp-validation-for="IdEstadoHabitacion" class="text-danger"></span>
-                </div>
+                <input type="hidden" asp-for="IdEstadoHabitacion" value="1" />
                 <div class="form-group">
                     <label asp-for="IdPiso" class="form-label">Piso</label>
                     <select asp-for="IdPiso" class="form-control" asp-items="ViewBag.IdPiso" required>
@@ -173,6 +167,7 @@
                     <span asp-validation-for="IdPiso" class="text-danger"></span>
                 </div>
             </div>
+
 
             <div class="form-group">
                 <label asp-for="IdCategoria" class="form-label">Categoría</label>
