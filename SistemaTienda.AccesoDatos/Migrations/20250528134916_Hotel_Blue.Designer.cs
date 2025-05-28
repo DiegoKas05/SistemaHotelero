@@ -12,8 +12,8 @@ using SistemaHotelero.Data;
 namespace SistemaHotelero.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250528042313_HotelBlue")]
-    partial class HotelBlue
+    [Migration("20250528134916_Hotel_Blue")]
+    partial class Hotel_Blue
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -597,7 +597,7 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("SistemaHotelero.Models.Venta", "Venta")
-                        .WithMany()
+                        .WithMany("DetalleVenta")
                         .HasForeignKey("IdVenta")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -659,6 +659,11 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Recepcion");
+                });
+
+            modelBuilder.Entity("SistemaHotelero.Models.Venta", b =>
+                {
+                    b.Navigation("DetalleVenta");
                 });
 #pragma warning restore 612, 618
         }

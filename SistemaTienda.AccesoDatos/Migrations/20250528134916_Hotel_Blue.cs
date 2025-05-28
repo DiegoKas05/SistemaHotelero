@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SistemaHotelero.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class HotelBlue : Migration
+    public partial class Hotel_Blue : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

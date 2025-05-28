@@ -85,7 +85,7 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                     TempData["Error"] = $"El producto seleccionado no existe.";
                     return RedirectToAction(nameof(Registrar), new { id = id });
                 }
-                if (producto.Cantidad< item.cantidad)
+                if (producto.Cantidad < item.cantidad)  // ← AJUSTE AQUÍ
                 {
                     TempData["Error"] = $"Stock insuficiente para '{producto.Nombre}'. Disponibles: {producto.Cantidad}, solicitados: {item.cantidad}";
                     return RedirectToAction(nameof(Registrar), new { id = id });
@@ -99,9 +99,7 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                 IdRecepcion = id,
                 Total = total,
                 Estado = "Realizada"
-                // FechaCreacion se asigna automáticamente
             };
-
             _contenedorTrabajo.Venta.Add(venta);
             _contenedorTrabajo.Save();
 
@@ -116,23 +114,22 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                 };
                 _contenedorTrabajo.DetalleVenta.Add(detalle);
 
-                // 2. ACTUALIZAR STOCK DEL PRODUCTO
+                // 2. ACTUALIZAR CANTIDAD DEL PRODUCTO
                 var producto = _contenedorTrabajo.Productos.Get(item.idProducto);
                 if (producto != null)
                 {
                     producto.Cantidad -= item.cantidad;
-                    if (producto.Cantidad <= 0)
-                    {
-                        producto.Cantidad = 0;
-                        producto.Estado = false; // Cambia a inactivo
-                    }
+                    if (producto.Cantidad < 0) producto.Cantidad = 0;
                     _contenedorTrabajo.Productos.Update(producto);
                 }
             }
 
-                TempData["Exito"] = "Venta registrada correctamente y stock actualizado.";
+            _contenedorTrabajo.Save();
+
+            TempData["Exito"] = "Venta registrada correctamente y stock actualizado.";
             return RedirectToAction(nameof(Index));
         }
+
 
 
         public class DetalleVentaTemp

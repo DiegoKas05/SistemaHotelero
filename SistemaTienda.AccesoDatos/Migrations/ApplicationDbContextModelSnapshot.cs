@@ -594,7 +594,7 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("SistemaHotelero.Models.Venta", "Venta")
-                        .WithMany()
+                        .WithMany("DetalleVenta")
                         .HasForeignKey("IdVenta")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -656,6 +656,11 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Recepcion");
+                });
+
+            modelBuilder.Entity("SistemaHotelero.Models.Venta", b =>
+                {
+                    b.Navigation("DetalleVenta");
                 });
 #pragma warning restore 612, 618
         }
