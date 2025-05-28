@@ -45,6 +45,23 @@ namespace SistemaHotelero.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.TipoDocumento == "DUI")
+                {
+                    if (!EsDuiValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del DUI debe ser 12345678-9");
+                        return View(model);
+                    }
+                }
+                else if (model.TipoDocumento == "Pasaporte")
+                {
+                    if (!EsPasaporteValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del pasaporte no es válido");
+                        return View(model);
+                    }
+                }
+
                 // Verificar si el correo ya existe en la base de datos
                 var existingUser = await _userManager.FindByEmailAsync(model.Email);
                 if (existingUser != null)
@@ -123,6 +140,23 @@ namespace SistemaHotelero.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.TipoDocumento == "DUI")
+                {
+                    if (!EsDuiValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del DUI debe ser 12345678-9");
+                        return View(model);
+                    }
+                }
+                else if (model.TipoDocumento == "Pasaporte")
+                {
+                    if (!EsPasaporteValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del pasaporte no es válido");
+                        return View(model);
+                    }
+                }
+
                 // Verificar si el correo ya existe en la base de datos
                 var existingUser = await _userManager.FindByEmailAsync(model.Email);
                 if (existingUser != null)
@@ -172,6 +206,23 @@ namespace SistemaHotelero.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.TipoDocumento == "DUI")
+                {
+                    if (!EsDuiValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del DUI debe ser 12345678-9");
+                        return View(model);
+                    }
+                }
+                else if (model.TipoDocumento == "Pasaporte")
+                {
+                    if (!EsPasaporteValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del pasaporte no es válido");
+                        return View(model);
+                    }
+                }
+
                 var existingUser = await _userManager.FindByEmailAsync(model.Email);
                 if (existingUser != null)
                 {
@@ -240,6 +291,23 @@ namespace SistemaHotelero.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.TipoDocumento == "DUI")
+                {
+                    if (!EsDuiValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del DUI debe ser 12345678-9");
+                        return View(model);
+                    }
+                }
+                else if (model.TipoDocumento == "Pasaporte")
+                {
+                    if (!EsPasaporteValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del pasaporte no es válido");
+                        return View(model);
+                    }
+                }
+
                 var empleado = await _userManager.FindByIdAsync(model.Id);
                 if (empleado == null)
                 {
@@ -332,6 +400,23 @@ namespace SistemaHotelero.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.TipoDocumento == "DUI")
+                {
+                    if (!EsDuiValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del DUI debe ser 12345678-9");
+                        return View(model);
+                    }
+                }
+                else if (model.TipoDocumento == "Pasaporte")
+                {
+                    if (!EsPasaporteValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del pasaporte no es válido");
+                        return View(model);
+                    }
+                }
+
                 var administrador = await _userManager.FindByIdAsync(model.Id);
                 if (administrador == null)
                 {
@@ -395,6 +480,23 @@ namespace SistemaHotelero.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.TipoDocumento == "DUI")
+                {
+                    if (!EsDuiValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del DUI debe ser 12345678-9");
+                        return View(model);
+                    }
+                }
+                else if (model.TipoDocumento == "Pasaporte")
+                {
+                    if (!EsPasaporteValido(model.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("NumeroDocumento", "El formato del pasaporte no es válido");
+                        return View(model);
+                    }
+                }
+
                 var usuario = await _userManager.FindByIdAsync(model.Id);
                 if (usuario == null)
                 {
@@ -540,5 +642,31 @@ namespace SistemaHotelero.Areas.Admin.Controllers
 
 
         #endregion
+
+        private bool EsDuiValido(string dui)
+        {
+            if (string.IsNullOrEmpty(dui))
+                return false;
+
+            var partes = dui.Split('-');
+            if (partes.Length != 2)
+                return false;
+
+            if (partes[0].Length != 8 || partes[1].Length != 1)
+                return false;
+
+            return partes[0].All(char.IsDigit) && partes[1].All(char.IsDigit);
+        }
+
+        private bool EsPasaporteValido(string pasaporte)
+        {
+            if (string.IsNullOrEmpty(pasaporte))
+                return false;
+
+            if (pasaporte.Length < 6 || pasaporte.Length > 12)
+                return false;
+
+            return pasaporte.Any(char.IsLetter) && pasaporte.Any(char.IsDigit);
+        }
     }
 }

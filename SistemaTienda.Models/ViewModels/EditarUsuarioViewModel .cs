@@ -42,10 +42,9 @@ namespace SistemaHotelero.Models.ViewModels
         [Display(Name = "Tipo de Documento")]
         public string TipoDocumento { get; set; }
 
+        // En EditarUsuarioViewModel.cs (mismo cambio)
         [Required(ErrorMessage = "El número de documento es requerido")]
         [Display(Name = "Número de Documento")]
-        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Solo se permiten números")]
-        [StringLength(20, MinimumLength = 4, ErrorMessage = "Debe tener entre 4 y 20 dígitos")]
         public string NumeroDocumento { get; set; }
     }
 }
