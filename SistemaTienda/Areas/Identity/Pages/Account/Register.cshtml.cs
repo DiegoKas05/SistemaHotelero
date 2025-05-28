@@ -1,8 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -98,8 +94,7 @@ namespace SistemaHotelero.Areas.Identity.Pages.Account
 
             [Required(ErrorMessage = "El número de documento es requerido")]
             [Display(Name = "Número de Documento")]
-            [RegularExpression(@"^[0-9]+$", ErrorMessage = "Solo se permiten números")]
-            [StringLength(20, MinimumLength = 4, ErrorMessage = "Debe tener entre 4 y 20 dígitos")]
+            [CustomDocumentValidation(ErrorMessage = "El número de documento no es válido")]
             public string NumeroDocumento { get; set; }
         }
 
@@ -115,6 +110,24 @@ namespace SistemaHotelero.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                // Validación adicional para DUI y Pasaporte según el tipo seleccionado
+                if (Input.TipoDocumento == "DUI")
+                {
+                    if (!EsDuiValido(Input.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("Input.NumeroDocumento", "El formato del DUI debe ser 12345678-9");
+                        return Page();
+                    }
+                }
+                else if (Input.TipoDocumento == "Pasaporte")
+                {
+                    if (!EsPasaporteValido(Input.NumeroDocumento))
+                    {
+                        ModelState.AddModelError("Input.NumeroDocumento", "El formato del pasaporte no es válido");
+                        return Page();
+                    }
+                }
+
                 var user = CreateUser();
 
                 user.Nombre = Input.Nombre;
@@ -129,46 +142,29 @@ namespace SistemaHotelero.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-
-                    //Aqui validamos si los roles existen sino se crean
                     if (!await _roleManager.RoleExistsAsync(CNT.Admin))
                     {
                         await _roleManager.CreateAsync(new IdentityRole(CNT.Admin));
                         await _roleManager.CreateAsync(new IdentityRole(CNT.Usuario));
                         await _roleManager.CreateAsync(new IdentityRole(CNT.Empleado));
                     }
-                    //Obtenemos el rol seleccionado
+
                     string rol = Request.Form["radUsuarioRole"].ToString();
 
-                    //Validamos si el rol seleccionado es Admin y si lo es lo agregamos
                     if (rol == CNT.Admin)
                     {
                         await _userManager.AddToRoleAsync(user, CNT.Admin);
                     }
                     else if (rol == CNT.Empleado)
                     {
-                        await _userManager.AddToRoleAsync(user, CNT.Empleado); // corrección aquí
+                        await _userManager.AddToRoleAsync(user, CNT.Empleado);
                     }
                     else if (rol == CNT.Usuario)
                     {
-                        await _userManager.AddToRoleAsync(user, CNT.Usuario); // corrección aquí
+                        await _userManager.AddToRoleAsync(user, CNT.Usuario);
                     }
 
-
-
                     _logger.LogInformation("User created a new account with password.");
-
-                    //var userId = await _userManager.GetUserIdAsync(user);
-                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    //var callbackUrl = Url.Page(
-                    //    "/Account/ConfirmEmail",
-                    //    pageHandler: null,
-                    //    values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                    //    protocol: Request.Scheme);
-
-                    //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                    //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -186,10 +182,38 @@ namespace SistemaHotelero.Areas.Identity.Pages.Account
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 
+        private bool EsDuiValido(string dui)
+        {
+            // Formato: 12345678-9 (8 dígitos, guión, 1 dígito)
+            if (string.IsNullOrEmpty(dui))
+                return false;
+
+            var partes = dui.Split('-');
+            if (partes.Length != 2)
+                return false;
+
+            if (partes[0].Length != 8 || partes[1].Length != 1)
+                return false;
+
+            return partes[0].All(char.IsDigit) && partes[1].All(char.IsDigit);
+        }
+
+        private bool EsPasaporteValido(string pasaporte)
+        {
+            // Formato básico para pasaporte: letras y números, sin caracteres especiales
+            if (string.IsNullOrEmpty(pasaporte))
+                return false;
+
+            // Longitud típica entre 6 y 12 caracteres
+            if (pasaporte.Length < 6 || pasaporte.Length > 12)
+                return false;
+
+            // Debe contener al menos una letra y un número
+            return pasaporte.Any(char.IsLetter) && pasaporte.Any(char.IsDigit);
+        }
 
         private ApplicationUser CreateUser()
         {
@@ -212,6 +236,44 @@ namespace SistemaHotelero.Areas.Identity.Pages.Account
                 throw new NotSupportedException("The default UI requires a user store with email support.");
             }
             return (IUserEmailStore<ApplicationUser>)_userStore;
+        }
+    }
+
+    public class CustomDocumentValidationAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var model = (RegisterModel.InputModel)validationContext.ObjectInstance;
+            var numeroDocumento = value?.ToString();
+
+            if (model.TipoDocumento == "DUI")
+            {
+                if (string.IsNullOrEmpty(numeroDocumento))
+                    return new ValidationResult("El DUI es requerido");
+
+                var partes = numeroDocumento.Split('-');
+                if (partes.Length != 2)
+                    return new ValidationResult("El formato del DUI debe ser 12345678-9");
+
+                if (partes[0].Length != 8 || partes[1].Length != 1)
+                    return new ValidationResult("El DUI debe tener 8 dígitos, un guión y 1 dígito");
+
+                if (!partes[0].All(char.IsDigit) || !partes[1].All(char.IsDigit))
+                    return new ValidationResult("El DUI solo debe contener números y un guión");
+            }
+            else if (model.TipoDocumento == "Pasaporte")
+            {
+                if (string.IsNullOrEmpty(numeroDocumento))
+                    return new ValidationResult("El pasaporte es requerido");
+
+                if (numeroDocumento.Length < 6 || numeroDocumento.Length > 12)
+                    return new ValidationResult("El pasaporte debe tener entre 6 y 12 caracteres");
+
+                if (!numeroDocumento.Any(char.IsLetter) || !numeroDocumento.Any(char.IsDigit))
+                    return new ValidationResult("El pasaporte debe contener letras y números");
+            }
+
+            return ValidationResult.Success;
         }
     }
 }
