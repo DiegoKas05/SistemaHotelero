@@ -25,5 +25,6 @@ namespace SistemaHotelero.Models
         [StringLength(50)]
         public string Estado { get; set; }
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
+        public virtual ICollection<DetalleVenta> DetalleVenta { get; set; }
     }
 }
