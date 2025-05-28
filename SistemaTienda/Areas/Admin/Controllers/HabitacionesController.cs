@@ -94,7 +94,7 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             // Verificar si la habitación está ocupada o en limpieza
             if (habitacion.IdEstadoHabitacion == 2 || habitacion.IdEstadoHabitacion == 3)
             {
-                TempData["Error"] = "No se puede editar una habitación que está ocupada o en limpieza.";
+                TempData["Error"] = "No se puede editar por que esta ocupada";
                 return RedirectToAction(nameof(Index));
             }
 
