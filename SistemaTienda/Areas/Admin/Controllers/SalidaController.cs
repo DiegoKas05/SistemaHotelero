@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SistemaHotelero.DataAccess.Data.Repository.iRepository;
 using SistemaHotelero.Models;
+using SistemaHotelero.Models.ViewModels;
 using System.Linq;
 
 namespace SistemaHotelero.Areas.Admin.Controllers
@@ -41,7 +42,22 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(reserva);
+            // Buscar ventas asociadas a la reserva encontrada
+            var ventas = _contenedorTrabajo.Venta.GetAll(
+                v => v.IdRecepcion == reserva.IdRecepcion,
+                includeProperties: "DetalleVenta.Producto")
+                .ToList();
+
+            decimal totalVentas = ventas.SelectMany(v => v.DetalleVenta).Sum(dv => dv.SubTotal);
+
+            var salidaVM = new SalidaVM
+            {
+                Recepcion = reserva,
+                Ventas = ventas,
+                TotalVentas = totalVentas
+            };
+
+            return View(salidaVM);
         }
 
         [HttpPost]

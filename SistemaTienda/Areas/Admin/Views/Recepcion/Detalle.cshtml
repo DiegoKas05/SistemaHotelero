@@ -1,4 +1,4 @@
-﻿@model SistemaHotelero.Models.Recepcion
+﻿@model SistemaHotelero.Models.ViewModels.ReservaVM
 
 @{
     ViewData["Title"] = "Detalle de Reserva";
@@ -155,6 +155,49 @@
         .detail-label {
             margin-bottom: 0.3rem;
         }
+	}
+
+    .venta-table {
+        border-radius: 12px !important;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+        .venta-table th, .venta-table td {
+            vertical-align: middle !important;
+            padding: 0.75rem 1rem;
+        }
+
+        .venta-table thead {
+            background-color: #4e5bf2;
+            color: #fff;
+        }
+
+        .venta-table tfoot {
+            background-color: #eaf4ff;
+            font-size: 1.1rem;
+        }
+
+        .venta-table tbody tr {
+            transition: background 0.2s;
+        }
+
+            .venta-table tbody tr:hover {
+                background: #f2f4fa;
+            }
+
+        .venta-table td, .venta-table th {
+            border: none !important;
+        }
+
+    .empty-services {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.2rem;
+        text-align: center;
+        color: #6c757d;
+        margin-top: 1rem;
+        box-shadow: 0 1px 8px rgba(0,0,0,.07);
     }
 </style>
 
@@ -198,17 +241,21 @@
                 <div class="form-group">
                     <div class="detail-row">
                         <span class="detail-label">Cliente:</span>
-                        <span class="detail-value">@Model.ApplicationUser.Nombre @Model.ApplicationUser.Apellido</span>
+                        <span class="detail-value">@Model.Recepcion.ApplicationUser.Nombre @Model.Recepcion.ApplicationUser.Apellido</span>
                     </div>
                     <div class="detail-row">
                         <span class="detail-label">Documento:</span>
-                        <span class="detail-value">@Model.ApplicationUser.TipoDocumento: @Model.ApplicationUser.NumeroDocumento</span>
+                        <span class="detail-value">@Model.Recepcion.ApplicationUser.TipoDocumento: @Model.Recepcion.ApplicationUser.NumeroDocumento</span>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="detail-row">
                         <span class="detail-label">Correo:</span>
-                        <span class="detail-value">@Model.ApplicationUser.Email</span>
+                        <span class="detail-value">@Model.Recepcion.ApplicationUser.Email</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Teléfono:</span>
+                        <span class="detail-value">@(Model.Recepcion.ApplicationUser.PhoneNumber ?? "No registrado")</span>
                     </div>
                 </div>
             </div>
@@ -218,35 +265,90 @@
         <div class="detail-grid">
             <div class="detail-item">
                 <label class="fw-bold">Fecha Entrada:</label>
-                <p>@Model.FechaEntrada.ToShortDateString()</p>
+                <div class="detail-value">@Model.Recepcion.FechaEntrada.ToShortDateString()</div>
             </div>
 
             <div class="detail-item">
                 <span class="detail-label">Fecha Salida:</span>
-                <div class="detail-value">@(Model.FechaSalida?.ToShortDateString() ?? "No definida")</div>
+                <div class="detail-value">@(Model.Recepcion.FechaSalida?.ToShortDateString() ?? "No definida")</div>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Costo Total:</span>
-                <div class="detail-value currency-value">$@Model.PrecioInicial.ToString("F2")</div>
+                <div class="detail-value currency-value">$@Model.Recepcion.PrecioInicial.ToString("F2")</div>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Adelanto:</span>
-                <div class="detail-value currency-value">$@Model.Adelanto.ToString("F2")</div>
+                <div class="detail-value currency-value">$@Model.Recepcion.Adelanto.ToString("F2")</div>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Saldo Pendiente:</span>
-                <div class="detail-value currency-value">$@((Model.PrecioInicial - Model.Adelanto).ToString("F2"))</div>
+                <div class="detail-value currency-value">$@((Model.Recepcion.PrecioInicial - Model.Recepcion.Adelanto).ToString("F2"))</div>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Estado:</span>
+                <div class="detail-value">
+                    @if (Model.Recepcion.Estado)
+                    {
+                        <span class="badge badge-success">Activa</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-secondary">Finalizada</span>
+                    }
+                </div>
             </div>
             <div class="detail-item">
                 <span class="detail-label">Observaciones:</span>
-                <div class="detail-value">@(!string.IsNullOrEmpty(Model.Observacion) ? Model.Observacion : "Ninguna")</div>
+                <div class="detail-value">@(!string.IsNullOrEmpty(Model.Recepcion.Observacion) ? Model.Recepcion.Observacion : "Ninguna")</div>
             </div>
         </div>
 
-        <h5 class="section-title">Servicios Adicionales</h5>
+        <h5 class="section-title">Servicios a la Habitación</h5>
+        @if (Model.Ventas != null && Model.Ventas.Any())
+        {
+            <div class="table-responsive mb-4">
+                <table class="table table-hover shadow-sm rounded venta-table">
+                    <thead class="table-dark text-center align-middle">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>SubTotal</th>
+                            <th>Fecha</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var venta in Model.Ventas)
+                        {
+                            foreach (var detalle in venta.DetalleVenta)
+                            {
+                                <tr>
+                                    <td>@detalle.Producto.Nombre</td>
+                                    <td class="text-center">@detalle.Cantidad</td>
+                                    <td class="text-end">$@detalle.Producto.Precio.ToString("F2")</td>
+                                    <td class="text-end">$@detalle.SubTotal.ToString("F2")</td>
+                                    <td class="text-center">@venta.FechaCreacion.ToShortDateString()</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Total ventas:</td>
+                            <td class="text-end fw-bold text-primary" colspan="2">
+                                $@Model.Ventas.SelectMany(v => v.DetalleVenta).Sum(d => d.SubTotal).ToString("F2")
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        }
+        else
+        { 
         <div class="empty-services">
-            <i class="fas fa-info-circle"></i> No se encontraron servicios registrados
+            <i class="fas fa-info-circle"></i> No se encontraron ventas registradas para la habitación.
         </div>
+        }
 
         <div class="buttons-container">
             <a asp-action="Index" class="btn-action btn-secondary">

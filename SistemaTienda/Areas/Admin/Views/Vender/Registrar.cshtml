@@ -1,0 +1,203 @@
+﻿@model SistemaHotelero.Models.ViewModels.VentaVM
+
+@{
+    ViewData["Title"] = "Registrar Venta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-0 mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold text-primary mb-3">Resumen de la Habitación</h5>
+            <div class="row mb-3">
+                <div class="col-md-2"><strong>Número:</strong><br />@Model.Habitacion.Numero</div>
+                <div class="col-md-2"><strong>Detalles:</strong><br />@Model.Habitacion.Detalle</div>
+                <div class="col-md-2"><strong>Categoría:</strong><br />@Model.Habitacion.Categoria?.Descripcion</div>
+                <div class="col-md-2"><strong>Piso:</strong><br />@Model.Habitacion.Piso?.Descripcion</div>
+                <div class="col-md-2"><strong>Cliente:</strong><br />@Model.Cliente?.Nombre @Model.Cliente?.Apellido</div>
+                <div class="col-md-2"><strong>Documento:</strong><br />@Model.Cliente?.NumeroDocumento</div>
+            </div>
+        </div>
+    </div>
+
+    <form asp-action="Registrar" method="post" id="formVenta">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.IdRecepcion" />
+        <input type="hidden" id="DetalleVentaJson" name="DetalleVentaJson" />
+
+        <div class="card shadow border-0 mb-4">
+            <div class="card-body">
+                <h5 class="fw-bold text-primary mb-3">Detalle venta</h5>
+                <div class="row align-items-end mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label">Producto:</label>
+                        <select class="form-select" id="producto">
+                            <option value="" data-precio="0" data-stock="0">Seleccione</option>
+                            @foreach (var item in Model.ListaProductos)
+                            {
+                                var producto = Model.DetalleVenta.FirstOrDefault(x => x.IdProducto.ToString() == item.Value)?.Producto;
+                                <option value="@item.Value"
+                                        data-precio="@(producto?.Precio ?? 0)"
+                                        data-stock="@(producto?.Cantidad ?? 0)">
+                                    @item.Text
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Precio:</label>
+                        <input type="number" class="form-control" id="precio" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Stock:</label>
+                        <input type="number" class="form-control" id="stock" readonly>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Cantidad:</label>
+                        <input type="number" class="form-control" id="cantidad" value="1" min="1">
+                    </div>
+                    <div class="col-md-3">
+                        <button type="button" class="btn btn-success w-100" id="btnAgregar">Agregar</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="tablaDetalle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Sub Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Total Pagar</td>
+                                <td>
+                                    <input type="text" class="form-control fw-bold" id="totalPagar" value="0" readonly />
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-primary btn-lg">Finalizar Venta</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function () {
+            // Al cambiar producto
+        $("#producto").change(function () {
+            var id = $(this).val();
+            if (id) {
+                // Obtener precio por AJAX (si quieres, pero ya lo tienes)
+                $.get('/Admin/Vender/GetPrecioProducto', { id: id }, function (precio) {
+                    $("#precio").val(precio);
+                });
+                // Obtener stock actualizado por AJAX
+                $.get('/Admin/Vender/GetStockProducto', { id: id }, function (stock) {
+                    $("#stock").val(stock);
+                    $("#cantidad").val(1).attr("max", stock);
+                });
+            } else {
+                $("#precio").val('');
+                $("#stock").val('');
+                $("#cantidad").val(1).attr("max", 1);
+            }
+        });
+
+            // Agregar producto
+            $("#btnAgregar").click(function () {
+                var id = $("#producto").val();
+                var nombre = $("#producto option:selected").text();
+                var precio = parseFloat($("#precio").val());
+                var cantidad = parseInt($("#cantidad").val());
+                var stock = parseInt($("#stock").val());
+
+                if (!id || isNaN(precio) || isNaN(cantidad) || cantidad <= 0) {
+                    Swal.fire('Error', 'Complete los datos correctamente.', 'error');
+                    return;
+                }
+                if (cantidad > stock) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Sin stock suficiente!',
+                        text: 'No puedes vender más de la cantidad disponible.',
+                        confirmButtonColor: '#dc3545'
+                    });
+                    return;
+                }
+                // Evitar duplicados
+                var yaExiste = false;
+                $("#tablaDetalle tbody tr").each(function () {
+                    if ($(this).data("id") == id) {
+                        yaExiste = true;
+                    }
+                });
+                if (yaExiste) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Producto ya agregado',
+                        text: 'Este producto ya está en la lista.',
+                        confirmButtonColor: '#ffc107'
+                    });
+                    return;
+                }
+
+                var subTotal = precio * cantidad;
+                var fila = `<tr data-id="${id}">
+                    <td>${nombre}</td>
+                    <td>${cantidad}</td>
+                    <td>${precio.toFixed(2)}</td>
+                    <td>${subTotal.toFixed(2)}</td>
+                    <td><button type="button" class="btn btn-danger btn-sm btnEliminar">Quitar</button></td>
+                </tr>`;
+                $("#tablaDetalle tbody").append(fila);
+                actualizarTotal();
+            });
+
+            // Eliminar fila
+            $(document).on("click", ".btnEliminar", function () {
+                $(this).closest("tr").remove();
+                actualizarTotal();
+            });
+
+            // Enviar
+            $("#formVenta").submit(function (e) {
+                var detalle = [];
+                $("#tablaDetalle tbody tr").each(function () {
+                    var id = $(this).data("id");
+                    var cantidad = parseInt($(this).find("td:eq(1)").text());
+                    var subTotal = parseFloat($(this).find("td:eq(3)").text());
+                    detalle.push({ idProducto: id, cantidad: cantidad, subTotal: subTotal });
+                });
+                if (detalle.length === 0) {
+                    Swal.fire('Error', 'Agrega al menos un producto.', 'error');
+                    e.preventDefault();
+                    return false;
+                }
+                $("#DetalleVentaJson").val(JSON.stringify(detalle));
+            });
+
+            function actualizarTotal() {
+                var total = 0;
+                $("#tablaDetalle tbody tr").each(function () {
+                    total += parseFloat($(this).find("td:eq(3)").text());
+                });
+                $("#totalPagar").val(total.toFixed(2));
+            }
+        });
+    </script>
+}
