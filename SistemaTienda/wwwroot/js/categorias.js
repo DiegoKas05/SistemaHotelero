@@ -66,8 +66,17 @@ function Eliminar(url) {
                         toastr.success(data.message);
                         tablaCategoria.ajax.reload();
                     } else {
-                        toastr.error(data.message);
+                        // Mostrar mensaje de error con SweetAlert (igual que en pisos)
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
                     }
+                },
+                error: function () {
+                    toastr.error('Ocurrió un error al procesar la solicitud');
                 }
             });
         }

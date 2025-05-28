@@ -75,6 +75,19 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             if (piso == null)
                 return Json(new { success = false, message = "Piso no encontrado." });
 
+            // Verificar si hay habitaciones asociadas a este piso
+            bool tieneHabitaciones = _contenedorTrabajo.Habitacion.GetAll()
+                .Any(h => h.IdPiso == id);
+
+            if (tieneHabitaciones)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "No se puede eliminar el piso porque tiene habitaciones asociadas."
+                });
+            }
+
             _contenedorTrabajo.Piso.Remove(piso);
             _contenedorTrabajo.Save();
             return Json(new { success = true, message = "Piso eliminado correctamente." });

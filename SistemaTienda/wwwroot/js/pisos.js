@@ -73,8 +73,17 @@ function Eliminar(url) {
                         toastr.success(data.message);
                         tablaPiso.ajax.reload();
                     } else {
-                        toastr.error(data.message);
+                        // Mostrar mensaje de error con SweetAlert
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
                     }
+                },
+                error: function () {
+                    toastr.error('Ocurrió un error al procesar la solicitud');
                 }
             });
         }
