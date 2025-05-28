@@ -65,7 +65,7 @@ function cargarDataTable() {
 function Eliminar(url) {
     Swal.fire({
         title: '¿Estás seguro?',
-        text: "¡No podrás recuperar la habitación!",
+        text: "¡No podrás recuperar la habitacion!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#d33',
@@ -80,12 +80,23 @@ function Eliminar(url) {
                 success: function (data) {
                     if (data.success) {
                         toastr.success(data.message);
-                        tablaHabitacion.ajax.reload();
+                        tablaPiso.ajax.reload();
                     } else {
-                        toastr.error(data.message);
+                        // Mostrar mensaje de error con SweetAlert
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.message,
+                            icon: 'error',
+                            confirmButtonText: 'Aceptar'
+                        });
                     }
+                },
+                error: function () {
+                    toastr.error('Ocurrió un error al procesar la solicitud');
                 }
             });
         }
     });
 }
+
+

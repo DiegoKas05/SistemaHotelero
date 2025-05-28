@@ -91,6 +91,13 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             if (habitacion == null)
                 return NotFound();
 
+            // Verificar si la habitación está ocupada o en limpieza
+            if (habitacion.IdEstadoHabitacion == 2 || habitacion.IdEstadoHabitacion == 3)
+            {
+                TempData["Error"] = "No se puede editar una habitación que está ocupada o en limpieza.";
+                return RedirectToAction(nameof(Index));
+            }
+
             CargarListasDesplegables();
             return View(habitacion);
         }
@@ -99,12 +106,20 @@ namespace SistemaHotelero.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Habitacion habitacion)
         {
+            // Primero verificar el estado actual de la habitación en la base de datos
+            var habitacionDesdeDb = _contenedorTrabajo.Habitacion.Get(habitacion.IdHabitacion);
+            if (habitacionDesdeDb == null)
+                return NotFound();
+
+            // Verificar si la habitación está ocupada o en limpieza
+            if (habitacionDesdeDb.IdEstadoHabitacion == 2 || habitacionDesdeDb.IdEstadoHabitacion == 3)
+            {
+                TempData["Error"] = "No se puede editar una habitación que está ocupada o en limpieza.";
+                return RedirectToAction(nameof(Index));
+            }
+
             if (ModelState.IsValid)
             {
-                var habitacionDesdeDb = _contenedorTrabajo.Habitacion.Get(habitacion.IdHabitacion);
-                if (habitacionDesdeDb == null)
-                    return NotFound();
-
                 _contenedorTrabajo.Habitacion.Update(habitacion);
                 _contenedorTrabajo.Save();
 
@@ -135,11 +150,22 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             if (habitacion == null)
                 return Json(new { success = false, message = "Habitación no encontrada." });
 
+            // Validar que no esté ocupada ni en limpieza
+            if (habitacion.IdEstadoHabitacion == 2 || habitacion.IdEstadoHabitacion == 3)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "No se puede eliminar una habitación que está ocupada o en limpieza."
+                });
+            }
+
             _contenedorTrabajo.Habitacion.Remove(habitacion);
             _contenedorTrabajo.Save();
 
             return Json(new { success = true, message = "Habitación eliminada correctamente." });
         }
+
 
         #endregion
 
