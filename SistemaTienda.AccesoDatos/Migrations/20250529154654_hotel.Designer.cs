@@ -12,7 +12,7 @@ using SistemaHotelero.Data;
 namespace SistemaHotelero.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250529021717_hotel")]
+    [Migration("20250529154654_hotel")]
     partial class hotel
     {
         /// <inheritdoc />
