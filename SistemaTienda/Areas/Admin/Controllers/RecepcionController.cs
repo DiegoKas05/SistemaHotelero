@@ -133,7 +133,26 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(reserva);
+
+            var ventas = _contenedorTrabajo.Venta.GetAll(
+                v => v.IdRecepcion == reserva.IdRecepcion,
+                includeProperties: "DetalleVenta.Producto")
+                .ToList();
+
+
+            var detallesVenta = ventas.SelectMany(v => v.DetalleVenta).ToList();
+
+            var viewModel = new ReservaVM
+            {
+                Recepcion = reserva,
+                Habitacion = reserva.Habitacion,
+                Ventas = ventas,
+                DetallesVenta = detallesVenta
+
+            };
+
+            return View(viewModel);
         }
+
     }
 }

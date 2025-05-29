@@ -6,57 +6,69 @@
     var pisos = Model.Select(h => h.Piso.Descripcion.Trim()).Distinct().ToList();
 }
 
-<div class="d-flex justify-content-between mb-3">
-    <h3 class="fw-bold">Habitaciones Ocupadas</h3>
+<div class="container-fluid px-4">
+    <h2 class="mt-4 mb-3 text-primary"><i class="fas fa-shopping-cart"></i> Ventas por Habitación</h2>
 
-    <div class="form-group">
-        <label class="fw-semibold">Seleccionar Piso</label>
-        <select id="filtroPiso" class="form-select">
-            <option value="Todos">Todos</option>
-            @foreach (var piso in pisos)
-            {
-                <option value="@piso">@piso</option>
-            }
-        </select>
-    </div>
-</div>
-
-<div class="row" id="contenedorTarjetas">
-    @foreach (var habitacion in Model)
-    {
-        var piso = habitacion.Piso.Descripcion.Trim();
-        var categoria = habitacion.Categoria.Descripcion;
-
-        <div class="col-md-3 mb-4 tarjeta-habitacion" data-piso="@piso">
-            <div class="border rounded shadow-sm p-3 bg-warning bg-opacity-25 h-100">
-                <div class="d-flex justify-content-between align-items-start">
-                    <div>
-                        <strong>HAB: @habitacion.Numero</strong><br />
-                        <small class="text-muted">CATEGORÍA: @categoria.ToUpper()</small><br />
-                        <small class="text-muted">PISO: @piso.ToUpper()</small>
-                    </div>
-                    <i class="fas fa-bed fa-lg text-warning"></i>
-                </div>
-                <div class="mt-3">
-                    <a asp-action="RegistrarVenta" asp-route-id="@habitacion.IdHabitacion" class="btn btn-warning w-100 fw-bold text-white">
-                        INICIAR VENTA
-                    </a>
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+            <!-- Puedes agregar un filtro por piso si lo deseas, como en Recepcion -->
+            <div class="row align-items-center mb-3">
+                <label for="cbopiso" class="col-sm-2 col-form-label text-muted fw-bold">Seleccionar Piso</label>
+                <div class="col-sm-4">
+                    <select class="form-select shadow-sm" id="cbopiso">
+                        <option value="Todos">Todos</option>
+                        @foreach (var piso in Model.Select(h => h.Piso.Descripcion).Distinct())
+                        {
+                            <option value="@piso">@piso</option>
+                        }
+                    </select>
                 </div>
             </div>
+
+            <div class="row" id="habitaciones">
+                @foreach (var habitacion in Model)
+                {
+                    // Usamos el mismo estilo de color, pero solo habitaciones ocupadas
+                    var color = "danger"; // Solo ocupadas para vender
+                    var icono = "fa-bed";
+
+                    <div class="col-xl-3 col-md-6 mb-4 tarjeta-habitacion" data-piso="@habitacion.Piso.Descripcion">
+                        <div class="card border-start border-4 border-@color shadow-sm h-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div>
+                                        <h5 class="fw-bold mb-1 text-dark">NRO: @habitacion.Numero</h5>
+                                        <span class="badge bg-light text-dark border">@habitacion.Categoria.Descripcion</span>
+                                    </div>
+                                    <i class="fas @icono fa-2x text-@color"></i>
+                                </div>
+                                <p class="mb-0 text-muted small">Piso: @habitacion.Piso.Descripcion</p>
+                                <p class="mb-0 text-muted small">Detalles: @habitacion.Detalle</p>
+                            </div>
+                            <div class="card-footer bg-@color text-white d-flex justify-content-between align-items-center">
+                                <a asp-action="Registrar" asp-route-id="@habitacion.IdHabitacion" class="text-white fw-bold text-uppercase stretched-link">
+                                    Iniciar Venta
+                                </a>
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
-    }
-</div>
+    </div>
 
-@section Scripts {
-    <script>
-        document.getElementById('filtroPiso').addEventListener('change', function () {
-            const pisoSeleccionado = this.value;
-            const tarjetas = document.querySelectorAll('.tarjeta-habitacion');
+    @section Scripts {
+        <script>
+            document.getElementById('filtroPiso').addEventListener('change', function () {
+                const pisoSeleccionado = this.value;
+                const tarjetas = document.querySelectorAll('.tarjeta-habitacion');
 
-            tarjetas.forEach(tarjeta => {
-                const piso = tarjeta.getAttribute('data-piso');
-                tarjeta.style.display = (pisoSeleccionado === "Todos" || piso === pisoSeleccionado) ? "block" : "none";
+                tarjetas.forEach(tarjeta => {
+                    const piso = tarjeta.getAttribute('data-piso');
+                    tarjeta.style.display = (pisoSeleccionado === "Todos" || piso === pisoSeleccionado) ? "block" : "none";
+
+                });
             });
-        });
-    </script>
-}
+        </script>
+    }

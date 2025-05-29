@@ -1,6 +1,7 @@
 ﻿using SistemaHotelero.Models;
 using SistemaHotelero.DataAccess.Data.Repository.iRepository;
 using SistemaHotelero.Data;
+using System.Linq.Expressions;
 
 namespace SistemaHotelero.DataAccess.Data.Repository
 {
@@ -11,6 +12,11 @@ namespace SistemaHotelero.DataAccess.Data.Repository
         public ProductoRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
+        }
+
+        public Producto GetFirstOrDefault(Expression<Func<Producto, bool>> filter)
+        {
+            return _db.Producto.FirstOrDefault(filter);
         }
 
         public void Update(Producto producto)

@@ -12,5 +12,7 @@ namespace SistemaHotelero.Models.ViewModels
         public Recepcion Recepcion { get; set; }
         public Habitacion Habitacion { get; set; }
         public IEnumerable<SelectListItem> ListaClientes { get; set; }
+        public List<Venta> Ventas { get; set; }
+        public List<DetalleVenta> DetallesVenta { get; set; }
     }
 }

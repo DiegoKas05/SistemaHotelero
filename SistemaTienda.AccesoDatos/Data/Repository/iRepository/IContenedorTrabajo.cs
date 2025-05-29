@@ -14,6 +14,8 @@ namespace SistemaHotelero.DataAccess.Data.Repository.iRepository
         IRecepcionRepository Recepcion { get; }
         //acabo de agregar esto aqui
         IApplicationUserRepository ApplicationUser { get; }
+        IVentaRepository Venta { get; }
+        IDetalleVentaRepository DetalleVenta { get; }
 
 
         // Guarda los cambios en la base de datos
