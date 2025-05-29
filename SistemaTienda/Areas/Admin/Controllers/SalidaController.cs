@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SistemaHotelero.DataAccess.Data.Repository.iRepository;
 using SistemaHotelero.Models;
+using SistemaHotelero.Models.ViewModels;
 using System.Linq;
 
 namespace SistemaHotelero.Areas.Admin.Controllers
@@ -41,7 +42,22 @@ namespace SistemaHotelero.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(reserva);
+            // Buscar ventas asociadas a la reserva encontrada
+            var ventas = _contenedorTrabajo.Venta.GetAll(
+                v => v.IdRecepcion == reserva.IdRecepcion,
+                includeProperties: "DetalleVenta.Producto")
+                .ToList();
+
+            decimal totalVentas = ventas.SelectMany(v => v.DetalleVenta).Sum(dv => dv.SubTotal);
+
+            var salidaVM = new SalidaVM
+            {
+                Recepcion = reserva,
+                Ventas = ventas,
+                TotalVentas = totalVentas
+            };
+
+            return View(salidaVM);
         }
 
         [HttpPost]
@@ -59,22 +75,20 @@ namespace SistemaHotelero.Areas.Admin.Controllers
             // Actualizar la recepción
             recepcion.Estado = false; // Marcar como finalizada
             recepcion.FechaSalida = DateTime.Now;
-
-            // Aquí marcamos como pagado el total
-            recepcion.TotalPagado = recepcion.PrecioInicial;
-
             _contenedorTrabajo.Recepcion.Actualizar(recepcion);
 
-            // Actualizar la habitación a limpieza
+            // Actualizar la habitación a disponible
             var habitacion = _contenedorTrabajo.Habitacion.Get(recepcion.IdHabitacion);
-            habitacion.IdEstadoHabitacion = 3; // 3 = Limpieza
+            habitacion.IdEstadoHabitacion = 3; // 1 = Disponible
             _contenedorTrabajo.Habitacion.Update(habitacion);
+
+            // Registrar el pago (aquí puedes implementar tu lógica de pagos)
+            // ...
 
             _contenedorTrabajo.Save();
 
-            TempData["Mensaje"] = "Salida registrada correctamente y habitación marcada como limpieza.";
+            TempData["Mensaje"] = "Salida registrada correctamente y habitación marcada como disponible.";
             return RedirectToAction("Index");
         }
-
     }
 }

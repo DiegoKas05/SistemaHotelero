@@ -339,8 +339,7 @@ namespace SistemaHotelero.DataAccess.Migrations
 
                     b.Property<string>("Numero")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
@@ -594,7 +593,7 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("SistemaHotelero.Models.Venta", "Venta")
-                        .WithMany()
+                        .WithMany("DetalleVenta")
                         .HasForeignKey("IdVenta")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -609,19 +608,16 @@ namespace SistemaHotelero.DataAccess.Migrations
                     b.HasOne("SistemaHotelero.Models.Categoria", "Categoria")
                         .WithMany()
                         .HasForeignKey("IdCategoria")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SistemaHotelero.Models.EstadoHabitacion", "EstadoHabitacion")
                         .WithMany()
                         .HasForeignKey("IdEstadoHabitacion")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SistemaHotelero.Models.Piso", "Piso")
                         .WithMany()
                         .HasForeignKey("IdPiso")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categoria");
@@ -659,6 +655,11 @@ namespace SistemaHotelero.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Recepcion");
+                });
+
+            modelBuilder.Entity("SistemaHotelero.Models.Venta", b =>
+                {
+                    b.Navigation("DetalleVenta");
                 });
 #pragma warning restore 612, 618
         }

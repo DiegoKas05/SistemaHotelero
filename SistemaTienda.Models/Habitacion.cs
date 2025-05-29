@@ -10,7 +10,7 @@ namespace SistemaHotelero.Models
         public int IdHabitacion { get; set; }
 
         [Required(ErrorMessage = "El número de habitación es obligatorio.")]
-        [StringLength(50, ErrorMessage = "El número de habitación no debe exceder los 50 caracteres.")]
+        [Range(1, double.MaxValue, ErrorMessage = "Debe ser un valor positivo.")]
         public string Numero { get; set; }
 
         [StringLength(100, ErrorMessage = "El detalle no debe exceder los 100 caracteres.")]

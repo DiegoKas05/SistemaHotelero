@@ -5,6 +5,7 @@ using SistemaHotelero.Data;
 using SistemaHotelero.DataAccess.Data.Repository.iRepository;
 using Microsoft.AspNetCore.Identity;
 using SistemaHotelero.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace SistemaHotelero.DataAccess.Data.Repository
 {
@@ -27,6 +28,8 @@ namespace SistemaHotelero.DataAccess.Data.Repository
             Recepcion = new RecepcionRepository(_db);
             //recientemente agregado
             ApplicationUser = new ApplicationUserRepository(_db, _userManager, _roleManager);
+            Venta = new VentaRepository(_db);
+            DetalleVenta = new DetalleVentaRepository(_db);
         }
 
         // Implementación de las propiedades de la interfaz IContenedorTrabajo
@@ -38,6 +41,8 @@ namespace SistemaHotelero.DataAccess.Data.Repository
         public IRecepcionRepository Recepcion { get; private set; }
         //recien agregado
         public IApplicationUserRepository ApplicationUser { get; private set; }
+        public IVentaRepository Venta { get; private set; }
+        public IDetalleVentaRepository DetalleVenta { get; private set; }
 
 
         public void Save()
